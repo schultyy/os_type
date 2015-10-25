@@ -2,6 +2,7 @@ use std::process::Command;
 use std::fs;
 use std::convert::AsRef;
 use std::path::Path;
+use std::fmt;
 mod lsb_release;
 
 ///Supported operating system types
@@ -15,13 +16,20 @@ pub enum OSType {
     Debian
 }
 
-///Contains information about the operating system such as type and version
+impl fmt::Display for OSType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+///Information about the operating system such as type and version
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct OSInformation {
     pub operating_system: OSType,
     pub version: String
 }
+
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
     let metadata = fs::metadata(path);
@@ -70,6 +78,8 @@ fn lsb_release() -> Option<OSInformation> {
 ///```
 ///use os_type;
 ///let os = os_type::current_platform();
+///println!("Operating system {}", os.operating_system);
+///println!("Operating system version {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
 
