@@ -6,9 +6,9 @@ extern crate regex;
 use self::regex::Regex;
 
 pub struct SwVers {
-    pub product_name: String,
-    pub product_version: String,
-    pub build_version: String
+    pub product_name: Option<String>,
+    pub product_version: Option<String>,
+    pub build_version: Option<String>
 }
 
 fn extract_from_regex(stdout: &String, regex: Regex, group: usize) -> Option<String> {
@@ -42,8 +42,8 @@ pub fn parse(version_str: String) -> SwVers {
     let build_number_regex = Regex::new(r"BuildVersion:\s(\w+)").unwrap();
 
     SwVers {
-        product_name: extract_from_regex(&version_str, product_name_regex, 1).unwrap(),
-        product_version: extract_from_regex(&version_str, product_version_regex, 1).unwrap(),
-        build_version: extract_from_regex(&version_str, build_number_regex, 1).unwrap(),
+        product_name: extract_from_regex(&version_str, product_name_regex, 1),
+        product_version: extract_from_regex(&version_str, product_version_regex, 1),
+        build_version: extract_from_regex(&version_str, build_number_regex, 1),
     }
 }

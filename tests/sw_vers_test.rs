@@ -12,17 +12,17 @@ BuildVersion:	14F27
 #[test]
 pub fn parses_product_name() {
     let info = sw_vers::parse(file());
-    assert_eq!(info.product_name, "Mac OS X");
+    assert_eq!(info.product_name, Some("Mac OS X".to_string()));
 }
 
 #[test]
 pub fn parses_product_version() {
     let info = sw_vers::parse(file());
-    assert_eq!(info.product_version, "10.10.5");
+    assert_eq!(info.product_version, Some("10.10.5".to_string()));
 }
 
 #[test]
 pub fn parses_build_version() {
     let info = sw_vers::parse(file());
-    assert_eq!(info.build_version, "14F27");
+    assert_eq!(info.build_version, Some("14F27".to_string()));
 }
