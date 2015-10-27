@@ -6,6 +6,7 @@ use std::path::Path;
 mod lsb_release;
 pub mod os_information;
 use os_information::{OSType, OSInformation};
+mod sw_vers;
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
     let metadata = fs::metadata(path);
@@ -65,9 +66,14 @@ pub fn current_platform() -> OSInformation {
     };
 
     if is_os_x() {
+        let osx_info = match sw_vers::retrieve() {
+            Some(osx) => osx,
+            None => return unknown_os
+        };
+
         OSInformation {
             operating_system: OSType::OSX,
-            version: "0.0.0".into()
+            version: osx_info.product_version.unwrap_or("0.0.0".into())
         }
     }
     else if lsb_release::is_available() {

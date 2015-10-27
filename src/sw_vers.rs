@@ -33,7 +33,13 @@ pub fn is_os_x() -> bool {
 }
 
 pub fn retrieve() -> Option<SwVers> {
-    None
+    let output = match Command::new("sw_vers").output() {
+        Ok(output) => output,
+        Err(_) => return None
+    };
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    Some(parse(stdout.to_string()))
 }
 
 pub fn parse(version_str: String) -> SwVers {
