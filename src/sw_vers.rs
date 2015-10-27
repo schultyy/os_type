@@ -11,10 +11,10 @@ pub struct SwVers {
     pub build_version: Option<String>
 }
 
-fn extract_from_regex(stdout: &String, regex: Regex, group: usize) -> Option<String> {
+fn extract_from_regex(stdout: &String, regex: Regex) -> Option<String> {
     match regex.captures_iter(&stdout).next() {
         Some(m) => {
-            match m.at(group) {
+            match m.at(1) {
                 Some(s) => {
                     Some(s.to_string())
                 },
@@ -42,8 +42,8 @@ pub fn parse(version_str: String) -> SwVers {
     let build_number_regex = Regex::new(r"BuildVersion:\s(\w+)").unwrap();
 
     SwVers {
-        product_name: extract_from_regex(&version_str, product_name_regex, 1),
-        product_version: extract_from_regex(&version_str, product_version_regex, 1),
-        build_version: extract_from_regex(&version_str, build_number_regex, 1),
+        product_name: extract_from_regex(&version_str, product_name_regex),
+        product_version: extract_from_regex(&version_str, product_version_regex),
+        build_version: extract_from_regex(&version_str, build_number_regex),
     }
 }
