@@ -1,3 +1,4 @@
+extern crate regex;
 use std::process::Command;
 use std::fs;
 use std::convert::AsRef;
