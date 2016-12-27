@@ -32,6 +32,12 @@ Right now, the following operating systems are detected:
 - RedHat
 - Ubuntu
 - openSUSE
+- Mint
+- Manjaro
+- elementary
+- Fedora
+- Zorin
+- deepin
 
 If you need support for more OS types, I am looking forward to your Pull Request.
 

@@ -19,6 +19,12 @@ pub enum OSType {
     Windows,
     Arch,
     openSUSE, // Is 'openSUSE' instead of 'OpenSUSE'.
+    Mint,
+    Manjaro,
+    elementary,
+    Fedora,
+    Zorin,
+    deepin,
 }
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
@@ -56,6 +62,18 @@ fn lsb_release() -> OSType {
                 OSType::Arch
             } else if release.distro == Some("openSUSE".to_string()) {
                 OSType::openSUSE
+            } else if release.distro == Some("Manjaro".to_string()) {
+                OSType::Manjaro
+            } else if release.distro == Some("Mint".to_string()) {
+                OSType::Mint
+            } else if release.distro == Some("elementary".to_string()) {
+                OSType::elementary
+            } else if release.distro == Some("Fedora".to_string()) {
+                OSType::Fedora
+            } else if release.distro == Some("deepin".to_string()) {
+                OSType::deepin
+            } else if release.distro == Some("Zorin".to_string()) {
+                OSType::Zorin
             } else {
                 OSType::Unknown
             }
