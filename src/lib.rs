@@ -5,7 +5,8 @@ use std::path::Path;
 mod lsb_release;
 mod windows_ver;
 
-///A list of supported operating system types
+/// A list of supported operating system types
+#[allow(non_camel_case_types)]
 #[derive(Debug)]
 #[derive(PartialEq)]
 #[derive(Clone)]
@@ -17,6 +18,7 @@ pub enum OSType {
     Debian,
     Windows,
     Arch,
+    openSUSE, // Is 'openSUSE' instead of 'OpenSUSE'.
 }
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
@@ -24,12 +26,12 @@ fn file_exists<P: AsRef<Path>>(path: P) -> bool {
 
     match metadata {
         Ok(md) => md.is_dir() || md.is_file(),
-        Err(_) => false
+        Err(_) => false,
     }
 }
 
 fn is_windows() -> bool {
-    if cfg!(target_os="windows") {
+    if cfg!(target_os = "windows") {
         return true;
     } else {
         return false;
@@ -39,7 +41,7 @@ fn is_windows() -> bool {
 fn is_os_x() -> bool {
     match Command::new("sw_vers").output() {
         Ok(output) => output.status.success(),
-        Err(_) => false
+        Err(_) => false,
     }
 }
 
@@ -48,43 +50,39 @@ fn lsb_release() -> OSType {
         Some(release) => {
             if release.distro == Some("Ubuntu".to_string()) {
                 OSType::Ubuntu
-            }
-            else if release.distro == Some("Debian".to_string()) {
+            } else if release.distro == Some("Debian".to_string()) {
                 OSType::Debian
             } else if release.distro == Some("Arch".to_string()) {
                 OSType::Arch
-            }
-            else {
+            } else if release.distro == Some("openSUSE".to_string()) {
+                OSType::openSUSE
+            } else {
                 OSType::Unknown
             }
-        },
-        None => OSType::Unknown
+        }
+        None => OSType::Unknown,
     }
 
 }
 
-///Returns the current operating system type
+/// Returns the current operating system type
 ///
-///#Example
+/// #Example
 ///
-///```
-///use os_type;
-///let os = os_type::current_platform();
-///```
+/// ```
+/// use os_type;
+/// let os = os_type::current_platform();
+/// ```
 pub fn current_platform() -> OSType {
     if is_os_x() {
         OSType::OSX
-    }
-    else if is_windows() {
+    } else if is_windows() {
         OSType::Windows
-    }
-    else if lsb_release::is_available() {
+    } else if lsb_release::is_available() {
         lsb_release()
-    }
-    else if file_exists("/etc/redhat-release") || file_exists("/etc/centos-release") {
+    } else if file_exists("/etc/redhat-release") || file_exists("/etc/centos-release") {
         OSType::Redhat
-    }
-    else {
+    } else {
         OSType::Unknown
     }
 }

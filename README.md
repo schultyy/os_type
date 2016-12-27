@@ -31,6 +31,7 @@ Right now, the following operating systems are detected:
 - CentOS
 - RedHat
 - Ubuntu
+- openSUSE
 
 If you need support for more OS types, I am looking forward to your Pull Request.
 
