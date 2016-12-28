@@ -19,15 +19,24 @@ extern crate os_type;
 
 fn foo() {
       match os_type::current_platform() {
-        os_type::OSType::OSX => /*Do something here*/,
-        _ => None
-    }
+        os_type::OSType::Windows => {
+            // Do something here ...
+        }
+        os_type::OSType::OSX => {
+            // Do something here ...
+        }
+        os_type::OSType::Distro("openSUSE") =>{
+             // Do something here ...
+        },
+        _ => {}
+    };
 }
 ```
 
 Right now, the following operating systems are detected:
 
 - Mac OS X
+- Windows
 - CentOS
 - RedHat
 - Ubuntu

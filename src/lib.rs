@@ -2,6 +2,8 @@ use std::process::Command;
 use std::fs;
 use std::convert::AsRef;
 use std::path::Path;
+use std::collections::HashSet;
+
 mod lsb_release;
 mod windows_ver;
 
@@ -13,18 +15,9 @@ mod windows_ver;
 pub enum OSType {
     Unknown,
     Redhat,
-    OSX,
-    Ubuntu,
-    Debian,
     Windows,
-    Arch,
-    openSUSE, // Is 'openSUSE' instead of 'OpenSUSE'.
-    Mint,
-    Manjaro,
-    elementary,
-    Fedora,
-    Zorin,
-    deepin,
+    OSX,
+    Distro(&'static str),
 }
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
@@ -52,31 +45,28 @@ fn is_os_x() -> bool {
 }
 
 fn lsb_release() -> OSType {
+    // Some distro'name begin with a lowercase letter, refer to the official website. example is 'openSUSE'.
+    let distros_strvec: Vec<&'static str> = vec!["openSUSE",
+                                                 "Ubuntu",
+                                                 "Debian",
+                                                 "Arch",
+                                                 "Mint",
+                                                 "Manjaro",
+                                                 "elementary",
+                                                 "Fedora",
+                                                 "Zorin",
+                                                 "deepin"];
+    let distros: HashSet<&'static str> = distros_strvec.into_iter().collect();
     match lsb_release::retrieve() {
         Some(release) => {
-            if release.distro == Some("Ubuntu".to_string()) {
-                OSType::Ubuntu
-            } else if release.distro == Some("Debian".to_string()) {
-                OSType::Debian
-            } else if release.distro == Some("Arch".to_string()) {
-                OSType::Arch
-            } else if release.distro == Some("openSUSE".to_string()) {
-                OSType::openSUSE
-            } else if release.distro == Some("Manjaro".to_string()) {
-                OSType::Manjaro
-            } else if release.distro == Some("Mint".to_string()) {
-                OSType::Mint
-            } else if release.distro == Some("elementary".to_string()) {
-                OSType::elementary
-            } else if release.distro == Some("Fedora".to_string()) {
-                OSType::Fedora
-            } else if release.distro == Some("deepin".to_string()) {
-                OSType::deepin
-            } else if release.distro == Some("Zorin".to_string()) {
-                OSType::Zorin
-            } else {
-                OSType::Unknown
+            let mut os_type = OSType::Unknown;
+            for osname in distros.iter() {
+                if release.distro == Some(osname.to_string()) {
+                    os_type = OSType::Distro(osname);
+                    break;
+                }
             }
+            os_type
         }
         None => OSType::Unknown,
     }
