@@ -1,8 +1,9 @@
+use std::collections::HashSet;
 use std::process::Command;
-use std::fs;
 use std::convert::AsRef;
 use std::path::Path;
-use std::collections::HashSet;
+use std::fmt;
+use std::fs;
 
 mod lsb_release;
 mod windows_ver;
@@ -13,11 +14,26 @@ mod windows_ver;
 #[derive(PartialEq)]
 #[derive(Clone)]
 pub enum OSType {
-    Unknown,
-    Redhat,
     Windows,
     OSX,
     Distro(&'static str),
+    Redhat,
+    CentOS,
+    Unknown,
+}
+
+impl fmt::Display for OSType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            OSType::Windows => write!(f, "windows")?,
+            OSType::OSX => write!(f, "OSX")?,
+            OSType::Distro(distro) => write!(f, "{}", distro)?,
+            OSType::Redhat => write!(f, "RedHat")?,
+            OSType::CentOS => write!(f, "CentOS")?,
+            OSType::Unknown => write!(f, "Unknown")?,            
+        };
+        Ok(())
+    }
 }
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
@@ -88,8 +104,10 @@ pub fn current_platform() -> OSType {
         OSType::Windows
     } else if lsb_release::is_available() {
         lsb_release()
-    } else if file_exists("/etc/redhat-release") || file_exists("/etc/centos-release") {
+    } else if file_exists("/etc/redhat-release") {
         OSType::Redhat
+    } else if file_exists("/etc/centos-release") {
+        OSType::CentOS
     } else {
         OSType::Unknown
     }

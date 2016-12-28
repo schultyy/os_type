@@ -18,18 +18,15 @@ In your code:
 extern crate os_type;
 
 fn foo() {
-      match os_type::current_platform() {
-        os_type::OSType::Windows => {
-            // Do something here ...
+    match format!("{}", os_type::current_platform()).as_ref() {
+        os @ "Windows" => {
+            // Do something here
         }
-        os_type::OSType::OSX => {
-            // Do something here ...
-        }
-        os_type::OSType::Distro("openSUSE") =>{
-             // Do something here ...
-        },
-        _ => {}
+        os @ "OSX" => {}
+        os @ "openSUSE" => {}        
+        os @ _ => {}
     };
+    println!("os_type: {}", os_type::current_platform());
 }
 ```
 
