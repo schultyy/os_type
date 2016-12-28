@@ -1,9 +1,10 @@
 [package]
 name = "os_type"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
 license = "MIT"
 description = "Detect the operating system type"
+keywords = ["os_type","ostype","os_name","osname","platform"]
 repository = "https://github.com/schultyy/os_type"
 [dependencies]
 regex="0.1.41"

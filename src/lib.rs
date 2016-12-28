@@ -1,22 +1,50 @@
+use std::collections::HashSet;
 use std::process::Command;
-use std::fs;
 use std::convert::AsRef;
 use std::path::Path;
+use std::fmt;
+use std::fs;
+
 mod lsb_release;
 mod windows_ver;
 
-///A list of supported operating system types
+/// A list of supported operating system types
 #[derive(Debug)]
 #[derive(PartialEq)]
 #[derive(Clone)]
 pub enum OSType {
-    Unknown,
-    Redhat,
-    OSX,
-    Ubuntu,
-    Debian,
     Windows,
-    Arch,
+    OSX,
+    Distro(&'static str),
+    Redhat,
+    CentOS,
+    Unknown,
+}
+
+impl fmt::Display for OSType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            OSType::Windows => write!(f, "Windows")?,
+            OSType::OSX => write!(f, "OSX")?,
+            OSType::Distro(distro) => write!(f, "{}", distro)?,
+            OSType::Redhat => write!(f, "RedHat")?,
+            OSType::CentOS => write!(f, "CentOS")?,
+            OSType::Unknown => write!(f, "Unknown")?,            
+        };
+        Ok(())
+    }
+}
+
+// conflicting implementations of trait `std::string::ToString` for type `OSType` in crate `collections`
+// so use 'To_String' to void.
+#[allow(non_camel_case_types)]
+trait To_String {
+    fn to_string(&self) -> String;
+}
+impl To_String for OSType {
+    fn to_string(&self) -> String {
+        format!("{}", self)
+    }
 }
 
 fn file_exists<P: AsRef<Path>>(path: P) -> bool {
@@ -24,12 +52,12 @@ fn file_exists<P: AsRef<Path>>(path: P) -> bool {
 
     match metadata {
         Ok(md) => md.is_dir() || md.is_file(),
-        Err(_) => false
+        Err(_) => false,
     }
 }
 
 fn is_windows() -> bool {
-    if cfg!(target_os="windows") {
+    if cfg!(target_os = "windows") {
         return true;
     } else {
         return false;
@@ -39,52 +67,59 @@ fn is_windows() -> bool {
 fn is_os_x() -> bool {
     match Command::new("sw_vers").output() {
         Ok(output) => output.status.success(),
-        Err(_) => false
+        Err(_) => false,
     }
 }
 
 fn lsb_release() -> OSType {
+    // Some distro'name begin with a lowercase letter, refer to the official website. example is 'openSUSE'.
+    let distros_strvec: Vec<&'static str> = vec!["openSUSE",
+                                                 "Ubuntu",
+                                                 "Debian",
+                                                 "Arch",
+                                                 "Mint",
+                                                 "Manjaro",
+                                                 "elementary",
+                                                 "Fedora",
+                                                 "Zorin",
+                                                 "deepin"];
+    let distros: HashSet<&'static str> = distros_strvec.into_iter().collect();
     match lsb_release::retrieve() {
         Some(release) => {
-            if release.distro == Some("Ubuntu".to_string()) {
-                OSType::Ubuntu
+            let mut os_type = OSType::Unknown;
+            for osname in distros.iter() {
+                if release.distro == Some(osname.to_string()) {
+                    os_type = OSType::Distro(osname);
+                    break;
+                }
             }
-            else if release.distro == Some("Debian".to_string()) {
-                OSType::Debian
-            } else if release.distro == Some("Arch".to_string()) {
-                OSType::Arch
-            }
-            else {
-                OSType::Unknown
-            }
-        },
-        None => OSType::Unknown
+            os_type
+        }
+        None => OSType::Unknown,
     }
 
 }
 
-///Returns the current operating system type
+/// Returns the current operating system type
 ///
-///#Example
+/// #Example
 ///
-///```
-///use os_type;
-///let os = os_type::current_platform();
-///```
+/// ```
+/// use os_type;
+/// let os = os_type::current_platform();
+/// ```
 pub fn current_platform() -> OSType {
     if is_os_x() {
         OSType::OSX
-    }
-    else if is_windows() {
+    } else if is_windows() {
         OSType::Windows
-    }
-    else if lsb_release::is_available() {
+    } else if lsb_release::is_available() {
         lsb_release()
-    }
-    else if file_exists("/etc/redhat-release") || file_exists("/etc/centos-release") {
+    } else if file_exists("/etc/redhat-release") {
         OSType::Redhat
-    }
-    else {
+    } else if file_exists("/etc/centos-release") {
+        OSType::CentOS
+    } else {
         OSType::Unknown
     }
 }
