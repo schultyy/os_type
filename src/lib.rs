@@ -9,7 +9,6 @@ mod lsb_release;
 mod windows_ver;
 
 /// A list of supported operating system types
-#[allow(non_camel_case_types)]
 #[derive(Debug)]
 #[derive(PartialEq)]
 #[derive(Clone)]
@@ -25,7 +24,7 @@ pub enum OSType {
 impl fmt::Display for OSType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            OSType::Windows => write!(f, "windows")?,
+            OSType::Windows => write!(f, "Windows")?,
             OSType::OSX => write!(f, "OSX")?,
             OSType::Distro(distro) => write!(f, "{}", distro)?,
             OSType::Redhat => write!(f, "RedHat")?,
@@ -33,6 +32,18 @@ impl fmt::Display for OSType {
             OSType::Unknown => write!(f, "Unknown")?,            
         };
         Ok(())
+    }
+}
+
+// conflicting implementations of trait `std::string::ToString` for type `OSType` in crate `collections`
+// so use 'To_String' to void.
+#[allow(non_camel_case_types)]
+trait To_String {
+    fn to_string(&self) -> String;
+}
+impl To_String for OSType {
+    fn to_string(&self) -> String {
+        format!("{}", self)
     }
 }
 

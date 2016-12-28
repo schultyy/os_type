@@ -3,13 +3,18 @@
 # os_type
 Rust library to detect the operating system type
 
+## Explain  
+`os_type::current_platform()` return a enum.   
+
+impl  `Debug, Display , To_String` for the enum.
+
 ## Usage
 
 Include this into your `Cargo.toml`:
 
 ```toml
 [dependencies]
-os_type="0.5.0"
+os_type="0.7.0"
 ```
 
 In your code:
@@ -17,8 +22,13 @@ In your code:
 ```rust
 extern crate os_type;
 
-fn foo() {
-    match format!("{}", os_type::current_platform()).as_ref() {
+fn main() {
+    println!("Current OS test:");
+    println!("Debug: {:?}", os_type::current_platform());
+    println!("Display: {}", os_type::current_platform());
+    let os_type = os_type::current_platform().to_string();
+    println!("to_string: {}", os_type);
+    match os_type::current_platform().to_string().as_ref() {
         os @ "Windows" => {
             // Do something here
         }
@@ -26,7 +36,6 @@ fn foo() {
         os @ "openSUSE" => {}        
         os @ _ => {}
     };
-    println!("os_type: {}", os_type::current_platform());
 }
 ```
 
