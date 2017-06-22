@@ -6,6 +6,7 @@ mod windows_ver;
 mod rhel_release;
 mod sw_vers;
 mod utils;
+mod android_release;
 
 ///A list of supported operating system types
 #[derive(Debug)]
@@ -18,7 +19,8 @@ pub enum OSType {
     Ubuntu,
     Debian,
     Arch,
-    CentOS
+    CentOS,
+    Android
 }
 
 /// Holds information about Operating System type and its version
@@ -113,6 +115,14 @@ fn rhel_release() -> OSInformation {
     }
 }
 
+fn android_release() -> OSInformation {
+    let version = android_release::get_android_version();
+    OSInformation {
+        os_type: self::OSType::Android,
+        version: format!("{}", version)
+    }
+}
+
 ///Returns the current operating system type
 ///
 ///#Example
@@ -133,7 +143,11 @@ pub fn current_platform() -> OSInformation {
     else if utils::file_exists("/etc/redhat-release") || utils::file_exists("/etc/centos-release") {
         rhel_release()
     }
+    else if utils::file_exists("/init.rc") {
+        android_release()
+    }
     else {
+        println!("Init rc not found");
         unknown_os()
     }
 }
