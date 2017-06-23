@@ -147,7 +147,6 @@ pub fn current_platform() -> OSInformation {
         rhel_release()
     }
     else {
-        println!("File does not exist");
         unknown_os()
     }
 }
