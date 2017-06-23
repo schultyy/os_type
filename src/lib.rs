@@ -116,10 +116,11 @@ fn rhel_release() -> OSInformation {
 }
 
 fn android_release() -> OSInformation {
+    println!("Trying android");
     let version = android_release::get_android_version();
     OSInformation {
         os_type: self::OSType::Android,
-        version: format!("{}", version)
+        version: version
     }
 }
 
@@ -134,6 +135,7 @@ fn android_release() -> OSInformation {
 ///println!("Version: {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
+    println!("Getting platform");
     if is_os_x() {
         get_sw_vers()
     }
