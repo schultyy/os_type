@@ -116,7 +116,6 @@ fn rhel_release() -> OSInformation {
 }
 
 fn android_release() -> OSInformation {
-    println!("Trying android");
     let version = android_release::get_android_version();
     OSInformation {
         os_type: self::OSType::Android,
@@ -135,12 +134,10 @@ fn android_release() -> OSInformation {
 ///println!("Version: {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
-    println!("Getting platform");
     if is_os_x() {
         get_sw_vers()
     }
     else if utils::file_exists("/init.rc") {
-        println!("File does exist");
         android_release()
     }
     else if lsb_release::is_available() {

@@ -7,7 +7,11 @@ pub fn get_android_version() -> String {
 
     if output.is_ok() {
         let res = output.unwrap().stdout;
-        format!("{}", String::from_utf8_lossy(&res))
+        let result = format!("{}", String::from_utf8_lossy(&res));
+
+        let len = result.len();
+        result.truncate(len - 1);
+
     } else {
         super::default_version()
     }
