@@ -137,17 +137,18 @@ pub fn current_platform() -> OSInformation {
     if is_os_x() {
         get_sw_vers()
     }
+    else if utils::file_exists("/init.rc") {
+        println!("File does exist");
+        android_release()
+    }
     else if lsb_release::is_available() {
         lsb_release()
     }
     else if utils::file_exists("/etc/redhat-release") || utils::file_exists("/etc/centos-release") {
         rhel_release()
     }
-    else if utils::file_exists("/init.rc") {
-        android_release()
-    }
     else {
-        println!("Init rc not found");
+        println!("File does not exist");
         unknown_os()
     }
 }
