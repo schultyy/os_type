@@ -24,7 +24,7 @@ pub mod android_release {
         if output.is_ok() {
             let res = output.unwrap().stdout;
             let mut result = format!("{}", String::from_utf8_lossy(&res));
-            parse_android_version(&mut result)
+            Some(parse_android_version(&mut result))
         } else {
             None
         }
