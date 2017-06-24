@@ -16,7 +16,7 @@ pub mod android_release {
     /// Get the android version. This command executes
     /// getprop on the command line, and parse the result
     /// by reading the result
-    pub fn get_android_version() -> String {
+    pub fn get_android_version() -> Option<String> {
         let output = Command::new("getprop")
             .arg("ro.build.version.release")
             .output();
@@ -26,7 +26,7 @@ pub mod android_release {
             let mut result = format!("{}", String::from_utf8_lossy(&res));
             parse_android_version(&mut result)
         } else {
-            super::default_version()
+            None
         }
     }
 }

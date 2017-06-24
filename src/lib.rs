@@ -117,7 +117,7 @@ fn _current_platform() -> OSInformation {
     let version = android_release::android_release::get_android_version();
     OSInformation {
         os_type: self::OSType::Android,
-        version: version
+        version: version.unwrap_or(default_version())
     }
 }
 
