@@ -30,6 +30,7 @@ Right now, the following operating system types can be returned:
 - Debian
 - Arch
 - Android
+- Windows
 
 If you need support for more OS types, I am looking forward to your Pull Request.
 
