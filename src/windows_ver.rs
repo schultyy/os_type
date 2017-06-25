@@ -21,6 +21,8 @@ pub fn retrieve() -> Option<WindowsVer> {
 }
 
 pub fn parse(output: String) -> WindowsVer {
+
+    println!("Version: {}", output);
     let version_regex = Regex::new(r"^Microsoft Windows \[Version\s(\d+\.\d+\.\d+)\]$").unwrap();
 
     let version = match version_regex.captures_iter(&output).next() {
