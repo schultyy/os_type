@@ -2,7 +2,7 @@ use regex::Regex;
 use std::process::Command;
 
 pub struct WindowsVer {
-    pub version: Option<String>
+    pub version: String
 }
 
 pub fn retrieve() -> Option<WindowsVer> {
@@ -26,5 +26,6 @@ pub fn parse(output: String) -> WindowsVer {
         },
         None => None
     };
-    WindowsVer { version: version }
+
+    WindowsVer { version: version.unwrap_or("0.0.0".to_string()) }
 }

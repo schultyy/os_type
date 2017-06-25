@@ -20,7 +20,8 @@ pub enum OSType {
     Debian,
     Arch,
     CentOS,
-    Android
+    Android,
+    Windows
 }
 
 /// Holds information about Operating System type and its version
@@ -121,7 +122,21 @@ fn _current_platform() -> OSInformation {
     }
 }
 
-#[cfg(not(any(target_os ="android", target_os ="macos")))]
+#[cfg(target_os = "windows")]
+fn _current_platform() -> OSInformation {
+    let version : String = match windows_ver::retrieve() {
+        Some(v) => v.version,
+        None => default_version()
+
+    };
+
+    OSInformation {
+        os_type: self::OSType::Windows,
+        version: version
+    }
+}
+
+#[cfg(not(any(target_os ="android", target_os ="macos", target_os = "windows")))]
 fn _current_platform() -> OSInformation {
     if lsb_release::is_available() {
         lsb_release()
