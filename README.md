@@ -9,7 +9,7 @@ Include this into your `Cargo.toml`:
 
 ```toml
 [dependencies]
-os_type="1.0.0"
+os_type="1.1.0"
 ```
 
 In your code:
@@ -29,6 +29,8 @@ Right now, the following operating system types can be returned:
 - Ubuntu
 - Debian
 - Arch
+- Android
+- Windows
 
 If you need support for more OS types, I am looking forward to your Pull Request.
 

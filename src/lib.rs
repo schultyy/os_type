@@ -6,6 +6,7 @@ mod windows_ver;
 mod rhel_release;
 mod sw_vers;
 mod utils;
+mod android_release;
 
 ///A list of supported operating system types
 #[derive(Debug)]
@@ -18,7 +19,9 @@ pub enum OSType {
     Ubuntu,
     Debian,
     Arch,
-    CentOS
+    CentOS,
+    Android,
+    Windows
 }
 
 /// Holds information about Operating System type and its version
@@ -31,35 +34,6 @@ pub struct OSInformation {
     pub version: String
 }
 
-fn default_version() -> String {
-    "0.0.0".into()
-}
-
-fn unknown_os() -> OSInformation {
-    OSInformation {
-        os_type: OSType::Unknown,
-        version: default_version()
-    }
-}
-
-fn is_os_x() -> bool {
-    match Command::new("sw_vers").output() {
-        Ok(output) => output.status.success(),
-        Err(_) => false
-    }
-}
-
-fn get_sw_vers() -> OSInformation {
-    if let Some(osx_info) = sw_vers::retrieve() {
-        OSInformation {
-            os_type: OSType::OSX,
-            version: osx_info.product_version.unwrap_or(default_version())
-        }
-    } else {
-        unknown_os()
-    }
-}
-
 fn lsb_release() -> OSInformation {
     match lsb_release::retrieve() {
         Some(release) => {
@@ -69,26 +43,26 @@ fn lsb_release() -> OSInformation {
                     version: release.version.unwrap_or(default_version())
                 }
             }
-            else if release.distro == Some("Debian".to_string()) {
-                OSInformation {
-                    os_type: OSType::Debian,
-                    version: release.version.unwrap_or(default_version())
+                else if release.distro == Some("Debian".to_string()) {
+                    OSInformation {
+                        os_type: OSType::Debian,
+                        version: release.version.unwrap_or(default_version())
+                    }
+                } else if release.distro == Some("Arch".to_string()) {
+                    OSInformation {
+                        os_type: OSType::Arch,
+                        version: release.version.unwrap_or(default_version())
+                    }
                 }
-            } else if release.distro == Some("Arch".to_string()) {
-                OSInformation {
-                    os_type: OSType::Arch,
-                    version: release.version.unwrap_or(default_version())
-                }
-            }
-            else if release.distro == Some("CentOS".to_string()){
-                OSInformation {
-                    os_type: OSType::CentOS,
-                    version: release.version.unwrap_or(default_version())
-                }
-            }
-            else {
-                unknown_os()
-            }
+                    else if release.distro == Some("CentOS".to_string()){
+                        OSInformation {
+                            os_type: OSType::CentOS,
+                            version: release.version.unwrap_or(default_version())
+                        }
+                    }
+                        else {
+                            unknown_os()
+                        }
         },
         None => unknown_os()
     }
@@ -113,6 +87,68 @@ fn rhel_release() -> OSInformation {
     }
 }
 
+fn default_version() -> String {
+    "0.0.0".into()
+}
+
+fn unknown_os() -> OSInformation {
+    OSInformation {
+        os_type: OSType::Unknown,
+        version: default_version()
+    }
+}
+
+
+/// Get the current software version (if MacOS)
+#[cfg(target_os = "macos")]
+fn _current_platform() -> OSInformation {
+    if let Some(osx_info) = sw_vers::mac_os::retrieve() {
+        OSInformation {
+            os_type: OSType::OSX,
+            version: osx_info.product_version.unwrap_or(default_version())
+        }
+    } else {
+        unknown_os()
+    }
+}
+
+/// Get the release (if running of Android)
+#[cfg(target_os = "android")]
+fn _current_platform() -> OSInformation {
+    let version = android_release::android_release::get_android_version();
+    OSInformation {
+        os_type: self::OSType::Android,
+        version: version.unwrap_or(default_version())
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn _current_platform() -> OSInformation {
+    let version : String = match windows_ver::retrieve() {
+        Some(v) => v.version,
+        None => default_version()
+
+    };
+
+    OSInformation {
+        os_type: self::OSType::Windows,
+        version: version
+    }
+}
+
+#[cfg(not(any(target_os ="android", target_os ="macos", target_os = "windows")))]
+fn _current_platform() -> OSInformation {
+    if lsb_release::is_available() {
+        lsb_release()
+    }
+    else if utils::file_exists("/etc/redhat-release") || utils::file_exists("/etc/centos-release") {
+        rhel_release()
+    }
+    else {
+        unknown_os()
+    }
+}
+
 ///Returns the current operating system type
 ///
 ///#Example
@@ -124,16 +160,5 @@ fn rhel_release() -> OSInformation {
 ///println!("Version: {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
-    if is_os_x() {
-        get_sw_vers()
-    }
-    else if lsb_release::is_available() {
-        lsb_release()
-    }
-    else if utils::file_exists("/etc/redhat-release") || utils::file_exists("/etc/centos-release") {
-        rhel_release()
-    }
-    else {
-        unknown_os()
-    }
+    _current_platform()
 }

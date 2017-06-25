@@ -2,11 +2,14 @@ use regex::Regex;
 use std::process::Command;
 
 pub struct WindowsVer {
-    pub version: Option<String>
+    pub version: String
 }
 
 pub fn retrieve() -> Option<WindowsVer> {
-    let output = match Command::new("ver").output() {
+    let output = match Command::new("cmd")
+        .arg("/c")
+        .arg("ver")
+        .output() {
         Ok(o) => o,
         Err(_) => return None
     };
@@ -15,7 +18,7 @@ pub fn retrieve() -> Option<WindowsVer> {
 }
 
 pub fn parse(output: String) -> WindowsVer {
-    let version_regex = Regex::new(r"^Microsoft Windows \[Version\s(\d+\.\d+\.\d+)\]$").unwrap();
+    let version_regex = Regex::new(r"Microsoft Windows \[Version (\d+).(\d+).(\d+)\]").unwrap();
 
     let version = match version_regex.captures_iter(&output).next() {
         Some(m) => {
@@ -26,5 +29,5 @@ pub fn parse(output: String) -> WindowsVer {
         },
         None => None
     };
-    WindowsVer { version: version }
+    WindowsVer { version: version.unwrap_or(super::default_version()) }
 }
