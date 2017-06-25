@@ -6,7 +6,10 @@ pub struct WindowsVer {
 }
 
 pub fn retrieve() -> Option<WindowsVer> {
-    let output = match Command::new("ver").output() {
+    let output = match Command::new("cmd")
+        .arg("/c")
+        .arg("ver")
+        .output() {
         Ok(o) => o,
         Err(why) => {
             println!("Failed to execute ver: {}", why);
