@@ -11,19 +11,14 @@ pub fn retrieve() -> Option<WindowsVer> {
         .arg("ver")
         .output() {
         Ok(o) => o,
-        Err(why) => {
-            println!("Failed to execute ver: {}", why);
-            return None
-        }
+        Err(_) => return None
     };
     let stdout = String::from_utf8_lossy(&output.stdout);
     Some(parse(stdout.to_string()))
 }
 
 pub fn parse(output: String) -> WindowsVer {
-
-    println!("Version: {}", output);
-    let version_regex = Regex::new(r"^Microsoft Windows \[Version\s(\d+\.\d+\.\d+)\]$").unwrap();
+    let version_regex = Regex::new(r"Microsoft Windows \[Version (\d+).(\d+).(\d+)\]").unwrap();
 
     let version = match version_regex.captures_iter(&output).next() {
         Some(m) => {
@@ -34,6 +29,5 @@ pub fn parse(output: String) -> WindowsVer {
         },
         None => None
     };
-
-    WindowsVer { version: version.unwrap_or("0.0.0".to_string()) }
+    WindowsVer { version: version.unwrap_or(super::default_version()) }
 }
