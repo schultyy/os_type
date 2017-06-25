@@ -8,7 +8,10 @@ pub struct WindowsVer {
 pub fn retrieve() -> Option<WindowsVer> {
     let output = match Command::new("ver").output() {
         Ok(o) => o,
-        Err(_) => return None
+        Err(why) => {
+            println!("Failed to execute ver: {}", why);
+            return None
+        }
     };
     let stdout = String::from_utf8_lossy(&output.stdout);
     Some(parse(stdout.to_string()))
