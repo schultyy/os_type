@@ -23,8 +23,8 @@ pub fn is_available() -> bool {
 }
 
 pub fn parse(file: String) -> LsbRelease {
-    let distrib_regex = Regex::new(r"Distributor ID:\s(\w+)").unwrap();
-    let distrib_release_regex = Regex::new(r"Release:\s([\w\.]+)").unwrap();
+    let distrib_regex = Regex::new(r"Distributor ID:\s*(\w+)").unwrap();
+    let distrib_release_regex = Regex::new(r"Release:\s*([\w\.]+)").unwrap();
 
     let distro = match distrib_regex.captures_iter(&file).next() {
         Some(m) => {

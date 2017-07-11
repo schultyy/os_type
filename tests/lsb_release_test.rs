@@ -23,6 +23,16 @@ Codename:	n/a
 ".to_string()
 }
 
+fn opensuse_tumbleweed_file() -> String {
+"
+LSB Version:    n/a
+Distributor ID: openSUSE
+Description:    openSUSE Tumbleweed
+Release:        20170712
+Codename:       n/a
+".to_string()
+}
+
 #[test]
 pub fn test_parses_lsb_distro() {
     let parse_results = lsb_release::parse(file());
@@ -45,4 +55,16 @@ pub fn test_parses_arch_lsb_distro() {
 pub fn test_parses_arch_lsb_version() {
     let parse_results = lsb_release::parse(arch_file());
     assert_eq!(parse_results.version, Some("rolling".to_string()));
+}
+
+#[test]
+pub fn test_parses_opensuse_lsb_distro() {
+    let parse_results = lsb_release::parse(opensuse_tumbleweed_file());
+    assert_eq!(parse_results.distro, Some("openSUSE".to_string()));
+}
+
+#[test]
+pub fn test_parses_opensuse_lsb_version() {
+    let parse_results = lsb_release::parse(opensuse_tumbleweed_file());
+    assert_eq!(parse_results.version, Some("20170712".to_string()));
 }
