@@ -18,7 +18,8 @@ pub enum OSType {
     Ubuntu,
     Debian,
     Arch,
-    CentOS
+    CentOS,
+    OpenSUSE
 }
 
 /// Holds information about Operating System type and its version
@@ -83,6 +84,12 @@ fn lsb_release() -> OSInformation {
             else if release.distro == Some("CentOS".to_string()){
                 OSInformation {
                     os_type: OSType::CentOS,
+                    version: release.version.unwrap_or(default_version())
+                }
+            }
+            else if release.distro == Some("openSUSE".to_string()) {
+                OSInformation {
+                    os_type: OSType::OpenSUSE,
                     version: release.version.unwrap_or(default_version())
                 }
             }
