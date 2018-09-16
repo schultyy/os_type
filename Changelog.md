@@ -1,3 +1,13 @@
+<a name="v2.1.1"></a>
+## v2.1.1 (2018-09-16)
+
+
+#### Bug Fixes
+
+*   Update to regex 1.0 ([f2afcef5](f2afcef5))
+
+
+
 <a name="v2.1.0"></a>
 ## v2.1.0 (2018-09-16)
 
