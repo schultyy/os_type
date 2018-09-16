@@ -2,6 +2,7 @@ extern crate regex;
 
 use std::process::Command;
 mod lsb_release;
+mod os_release;
 mod windows_ver;
 mod rhel_release;
 mod sw_vers;
@@ -107,16 +108,55 @@ fn rhel_release() -> OSInformation {
             if release.distro == Some("CentOS".to_string()) {
                 OSInformation {
                     os_type: OSType::CentOS,
-                    version: release.version.unwrap_or(default_version())
+                    version: release.version.unwrap_or(default_version()),
                 }
             } else {
                 OSInformation {
                     os_type: OSType::Redhat,
-                    version: release.version.unwrap_or(default_version())
+                    version: release.version.unwrap_or(default_version()),
                 }
             }
+        }
+        None => unknown_os(),
+    }
+}
+
+fn os_release() -> OSInformation {
+    match os_release::retrieve() {
+        Some(release) => match release.distro {
+            Some(distro) => {
+                if distro.starts_with("Ubuntu") {
+                    OSInformation {
+                        os_type: OSType::Ubuntu,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else if distro.starts_with("Debian") {
+                    OSInformation {
+                        os_type: OSType::Debian,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else if distro.starts_with("Arch") {
+                    OSInformation {
+                        os_type: OSType::Arch,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else if distro.starts_with("CentOS") {
+                    OSInformation {
+                        os_type: OSType::CentOS,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else if distro.starts_with("openSUSE") {
+                    OSInformation {
+                        os_type: OSType::OpenSUSE,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else {
+                    unknown_os()
+                }
+            }
+            None => unknown_os(),
         },
-        None => unknown_os()
+        None => unknown_os(),
     }
 }
 
@@ -136,6 +176,9 @@ pub fn current_platform() -> OSInformation {
     }
     else if lsb_release::is_available() {
         lsb_release()
+    }
+    else if utils::file_exists("/etc/os-release") {
+        os_release()
     }
     else if utils::file_exists("/etc/redhat-release") || utils::file_exists("/etc/centos-release") {
         rhel_release()
