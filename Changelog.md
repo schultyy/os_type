@@ -1,3 +1,13 @@
+<a name="v2.2.0"></a>
+## v2.2.0 (2018-09-16)
+
+
+#### Features
+
+*   add support for Manjaro Linux ([a4fddb88](a4fddb88))
+
+
+
 <a name="v2.1.1"></a>
 ## v2.1.1 (2018-09-16)
 
