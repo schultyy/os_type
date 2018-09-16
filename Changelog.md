@@ -1,3 +1,14 @@
+<a name="v2.1.0"></a>
+## v2.1.0 (2018-09-16)
+
+
+#### Features
+
+*   add support for os-release ([c14c19f0](c14c19f0))
+*   add openSUSE support ([006de390](006de390))
+
+
+
 <a name="v2.0.0"></a>
 ## v2.0.0 (2017-05-19)
 
