@@ -23,6 +23,16 @@ Codename:	n/a
 ".to_string()
 }
 
+fn manjaro_file() -> String {
+"
+LSB Version:	n/a
+Distributor ID:	ManjaroLinux
+Description:	Manjaro Linux
+Release:	17.1.7
+Codename:	Hakoila
+".to_string()
+}
+
 fn opensuse_tumbleweed_file() -> String {
 "
 LSB Version:    n/a
@@ -55,6 +65,18 @@ pub fn test_parses_arch_lsb_distro() {
 pub fn test_parses_arch_lsb_version() {
     let parse_results = lsb_release::parse(arch_file());
     assert_eq!(parse_results.version, Some("rolling".to_string()));
+}
+
+#[test]
+pub fn test_parses_manjaro_lsb_distro() {
+    let parse_results = lsb_release::parse(manjaro_file());
+    assert_eq!(parse_results.distro, Some("ManjaroLinux".to_string()));
+}
+
+#[test]
+pub fn test_parses_manjaro_lsb_version() {
+    let parse_results = lsb_release::parse(manjaro_file());
+    assert_eq!(parse_results.version, Some("17.1.7".to_string()));
 }
 
 #[test]

@@ -19,6 +19,7 @@ pub enum OSType {
     Ubuntu,
     Debian,
     Arch,
+    Manjaro,
     CentOS,
     OpenSUSE
 }
@@ -79,6 +80,11 @@ fn lsb_release() -> OSInformation {
             } else if release.distro == Some("Arch".to_string()) {
                 OSInformation {
                     os_type: OSType::Arch,
+                    version: release.version.unwrap_or(default_version())
+                }
+            } else if release.distro == Some("ManjaroLinux".to_string()) {
+                OSInformation {
+                    os_type: OSType::Manjaro,
                     version: release.version.unwrap_or(default_version())
                 }
             }
