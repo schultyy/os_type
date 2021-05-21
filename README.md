@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/schultyy/os_type.svg?branch=master)](https://travis-ci.org/schultyy/os_type)
+[![Rust](https://github.com/schultyy/os_type/actions/workflows/rust.yml/badge.svg)](https://github.com/schultyy/os_type/actions/workflows/rust.yml)
 
 # os_type
 Rust library to detect the operating system type
