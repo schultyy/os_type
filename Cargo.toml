@@ -1,7 +1,7 @@
 [package]
 name = "os_type"
 version = "2.3.0"
-authors = ["Jan Schulte <hello@unexpected-co.de>"]
+authors = ["Jan Schulte <janschulte@fastmail.com>"]
 license = "MIT"
 description = "Detect the operating system type"
 repository = "https://github.com/schultyy/os_type"
