@@ -1,7 +1,7 @@
 [![Rust](https://github.com/schultyy/os_type/actions/workflows/rust.yml/badge.svg)](https://github.com/schultyy/os_type/actions/workflows/rust.yml)
 
 # os_type
-Rust library to detect the operating system type
+Rust library to detect the operating system type, because sometimes you need to know.
 
 ## Usage
 
@@ -9,7 +9,7 @@ Include this into your `Cargo.toml`:
 
 ```toml
 [dependencies]
-os_type="2.2"
+os_type="2.3"
 ```
 
 In your code:
@@ -32,13 +32,14 @@ match os_type::current_platform().os_type {
     println!("This is running Ubuntu Linux!");
   }
   _ => {
-    println!("I can't tell what system this is.");
+    println!("Unknown Operating System");
   }
 }
 ```
 
 
-Right now, the following operating system types can be returned:
+Using `os_type::current_platform().os_type`, expect one of these return values:
+
 - Unknown
 - Redhat
 - CentOS
@@ -49,7 +50,7 @@ Right now, the following operating system types can be returned:
 - Manjaro
 - Alpine
 
-If you need support for more OS types, I am looking forward to your Pull Request.
+If you need support for more OS types, please consider opening a Pull Request.
 
 ## Requirements
 
