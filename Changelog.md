@@ -1,3 +1,11 @@
+<a name="v2.3.0"></a>
+## v2.3.0 (2021-05-21)
+
+
+#### Features
+
+*   add support for Alpine Linux ([41f97e75fcae0a6feece3d2e6684bff5dfe6a0e7](41f97e75fcae0a6feece3d2e6684bff5dfe6a0e7))
+
 <a name="v2.2.0"></a>
 ## v2.2.0 (2018-09-16)
 
