@@ -21,7 +21,8 @@ pub enum OSType {
     Arch,
     Manjaro,
     CentOS,
-    OpenSUSE
+    OpenSUSE,
+    Alpine
 }
 
 /// Holds information about Operating System type and its version
@@ -156,7 +157,14 @@ fn os_release() -> OSInformation {
                         os_type: OSType::OpenSUSE,
                         version: release.version.unwrap_or(default_version()),
                     }
-                } else {
+                }
+                else if distro.starts_with("Alpine") {
+                    OSInformation {
+                        os_type: OSType::Alpine,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                }
+                else {
                     unknown_os()
                 }
             }
