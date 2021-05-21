@@ -35,7 +35,7 @@ pub fn retrieve() -> Option<OSRelease> {
 
 pub fn parse(file: String) -> OSRelease {
     let distrib_regex = Regex::new(r#"NAME="(\w+)"#).unwrap();
-    let version_regex = Regex::new(r#"VERSION_ID="([\w\.]+)"#).unwrap();
+    let version_regex = Regex::new(r#"VERSION_ID="?([\w\.]+)"#).unwrap();
 
     let distro = match distrib_regex.captures_iter(&file).next() {
         Some(m) => match m.get(1) {
@@ -81,6 +81,26 @@ mod tests {
             OSRelease {
                 distro: Some("Ubuntu".to_string()),
                 version: Some("18.04".to_string()),
+            }
+        );
+    }
+
+    #[test]
+    fn parse_alpine_3_9_5_os_release() {
+        let sample = "\
+        NAME=\"Alpine Linux\"
+        ID=alpine
+        VERSION_ID=3.9.5
+        PRETTY_NAME=\"Alpine Linux v3.9\"
+        HOME_URL=\"https://alpinelinux.org/\"
+        BUG_REPORT_URL=\"https://bugs.alpinelinux.org/\"
+        ".to_string();
+
+        assert_eq!(
+            parse(sample),
+            OSRelease {
+                distro: Some("Alpine".to_string()),
+                version: Some("3.9.5".to_string()),
             }
         );
     }
