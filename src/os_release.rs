@@ -104,4 +104,24 @@ mod tests {
             }
         );
     }
+    
+    #[test]
+    fn parse_deepin_20_3_os_release() {
+        let sample = "\
+        PRETTY_NAME=\"Deepin 20.3\"
+        NAME=\"Deepin\"
+        VERSION_ID=\"20.3\"
+        VERSION=\"20.3\"
+        ID=Deepin
+        HOME_URL=\"https://www.deepin.org/\"
+        ".to_string();
+
+        assert_eq!(
+            parse(sample),
+            OSRelease {
+                distro: Some("Deepin".to_string()),
+                version: Some("20.3".to_string()),
+            }
+        );
+    }
 }
