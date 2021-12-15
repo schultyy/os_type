@@ -22,7 +22,8 @@ pub enum OSType {
     Manjaro,
     CentOS,
     OpenSUSE,
-    Alpine
+    Alpine,
+    Deepin,
 }
 
 /// Holds information about Operating System type and its version
@@ -161,6 +162,12 @@ fn os_release() -> OSInformation {
                 else if distro.starts_with("Alpine") {
                     OSInformation {
                         os_type: OSType::Alpine,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                }
+                else if distro.starts_with("Deepin") {
+                    OSInformation {
+                        os_type: OSType::Deepin,
                         version: release.version.unwrap_or(default_version()),
                     }
                 }
