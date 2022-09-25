@@ -102,6 +102,11 @@ fn lsb_release() -> OSInformation {
                     os_type: OSType::OpenSUSE,
                     version: release.version.unwrap_or(default_version())
                 }
+            } else if release.distro == Some("Kali".to_string()) {
+                OSInformation {
+                    os_type: OSType::Kali,
+                    version: release.version.unwrap_or(default_version())
+                }
             }
             else {
                 unknown_os()
