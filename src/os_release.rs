@@ -128,15 +128,16 @@ mod tests {
     #[test]
     fn parse_kali_2021_4_os_release() {
         let sample = "\
-        NAME=\"Kali GNU/Linux\"\
-        VERSION=\"2021.4\"
+        PRETTY_NAME=\"Kali Linux GNU/Linux Rolling\"
+        NAME=\"Kali GNU/Linux\"
         ID=kali
+        VERSION=\"2021.4\"
+        VERSION_ID=\"2021.4\"
+        VERSION_CODENAME=\"kali-rolling\"
         ID_LIKE=debian
-        PRETTY_NAME=\"Kali Linux GNU/Linux Rolling\"\
-        VERSION_ID=\"2021.4\"\
-        HOME_URL=\"https://www.kali.org/\"\
-        SUPPORT_URL=\"https://forums.kali.org/\"\
-        BUG_REPORT_URL=\"https://bugs.kali.org\"\
+        HOME_URL=\"https://www.kali.org/\"
+        SUPPORT_URL=\"https://forums.kali.org/\"
+        BUG_REPORT_URL=\"https://bugs.kali.org\"
         ".to_string();
 
         assert_eq!(
