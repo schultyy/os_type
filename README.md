@@ -50,6 +50,7 @@ Using `os_type::current_platform().os_type`, expect one of these return values:
 - Manjaro
 - Alpine
 - Deepin
+- Kali
 
 If you need support for more OS types, please consider opening a Pull Request.
 

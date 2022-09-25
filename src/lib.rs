@@ -24,6 +24,7 @@ pub enum OSType {
     OpenSUSE,
     Alpine,
     Deepin,
+    Kali,
 }
 
 /// Holds information about Operating System type and its version
@@ -170,8 +171,12 @@ fn os_release() -> OSInformation {
                         os_type: OSType::Deepin,
                         version: release.version.unwrap_or(default_version()),
                     }
-                }
-                else {
+                } else if distro.starts_with("Kali") {
+                    OSInformation {
+                        os_type: OSType::Kali,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else {
                     unknown_os()
                 }
             }
