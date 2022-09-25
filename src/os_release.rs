@@ -129,7 +129,7 @@ mod tests {
     fn parse_kali_2021_4_os_release() {
         let sample = "\
         PRETTY_NAME=\"Kali Linux GNU/Linux Rolling\"
-        NAME=\"Kali GNU/Linux\"
+        NAME=\"Kali\"
         ID=kali
         VERSION=\"2021.4\"
         VERSION_ID=\"2021.4\"
