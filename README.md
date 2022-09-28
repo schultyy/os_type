@@ -9,7 +9,7 @@ Include this into your `Cargo.toml`:
 
 ```toml
 [dependencies]
-os_type="2.4"
+os_type="2.5"
 ```
 
 In your code:
@@ -50,6 +50,7 @@ Using `os_type::current_platform().os_type`, expect one of these return values:
 - Manjaro
 - Alpine
 - Deepin
+- NixOS
 - Kali
 
 If you need support for more OS types, please consider opening a Pull Request.

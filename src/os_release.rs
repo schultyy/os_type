@@ -74,7 +74,8 @@ mod tests {
         PRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\
         VERSION_CODENAME=bionic
         UBUNTU_CODENAME=bionic
-        ".to_string();
+        "
+        .to_string();
 
         assert_eq!(
             parse(sample),
@@ -94,7 +95,8 @@ mod tests {
         PRETTY_NAME=\"Alpine Linux v3.9\"
         HOME_URL=\"https://alpinelinux.org/\"
         BUG_REPORT_URL=\"https://bugs.alpinelinux.org/\"
-        ".to_string();
+        "
+        .to_string();
 
         assert_eq!(
             parse(sample),
@@ -104,7 +106,7 @@ mod tests {
             }
         );
     }
-    
+
     #[test]
     fn parse_deepin_20_3_os_release() {
         let sample = "\
@@ -114,13 +116,41 @@ mod tests {
         VERSION=\"20.3\"
         ID=Deepin
         HOME_URL=\"https://www.deepin.org/\"
-        ".to_string();
+        "
+        .to_string();
 
         assert_eq!(
             parse(sample),
             OSRelease {
                 distro: Some("Deepin".to_string()),
                 version: Some("20.3".to_string()),
+            }
+        );
+    }
+
+    #[test]
+    fn parse_nixos_21_11_os_release() {
+        let sample = "\
+        NAME=NixOS
+        ID=nixos
+        VERSION=\"21.11 (Porcupine)\"
+        VERSION_CODENAME=porcupine
+        VERSION_ID=\"21.11\"
+        BUILD_ID=\"21.11.20220325.d89f18a\"
+        PRETTY_NAME=\"NixOS 21.11 (Porcupine)\"
+        LOGO=\"nix-snowflake\"
+        HOME_URL=\"https://nixos.org/\"
+        DOCUMENTATION_URL=\"https://nixos.org/learn.html\"
+        SUPPORT_URL=\"https://nixos.org/community.html\"
+        BUG_REPORT_URL=\"https://github.com/NixOS/nixpkgs/issues\"
+        "
+        .to_string();
+
+        assert_eq!(
+            parse(sample),
+            OSRelease {
+                distro: Some("NixOS".to_string()),
+                version: Some("21.11".to_string()),
             }
         );
     }
@@ -138,7 +168,8 @@ mod tests {
         HOME_URL=\"https://www.kali.org/\"
         SUPPORT_URL=\"https://forums.kali.org/\"
         BUG_REPORT_URL=\"https://bugs.kali.org\"
-        ".to_string();
+        "
+        .to_string();
 
         assert_eq!(
             parse(sample),
