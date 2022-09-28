@@ -154,7 +154,6 @@ mod tests {
             }
         );
     }
-
     #[test]
     fn parse_kali_2021_4_os_release() {
         let sample = "\
