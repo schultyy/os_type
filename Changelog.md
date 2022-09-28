@@ -1,3 +1,11 @@
+<a name="v2.5.0"></a>
+## v2.5.0 (2022-09-27)
+
+
+#### Features
+
+*   add support for NixOS
+
 <a name="v2.3.0"></a>
 ## v2.3.0 (2021-05-21)
 
