@@ -23,6 +23,7 @@ pub enum OSType {
     Alpine,
     Deepin,
     NixOS,
+    Kali,
 }
 
 /// Holds information about Operating System type and its version
@@ -100,6 +101,11 @@ fn lsb_release() -> OSInformation {
                     os_type: OSType::NixOS,
                     version: release.version.unwrap_or(default_version()),
                 }
+            } else if release.distro == Some("Kali".to_string()) {
+                OSInformation {
+                    os_type: OSType::Kali,
+                    version: release.version.unwrap_or(default_version()),
+                }
             } else {
                 unknown_os()
             }
@@ -169,6 +175,11 @@ fn os_release() -> OSInformation {
                 } else if distro.starts_with("NixOS") {
                     OSInformation {
                         os_type: OSType::NixOS,
+                        version: release.version.unwrap_or(default_version()),
+                    }
+                } else if distro.starts_with("Kali") {
+                    OSInformation {
+                        os_type: OSType::Kali,
                         version: release.version.unwrap_or(default_version()),
                     }
                 } else {
