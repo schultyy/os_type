@@ -1,3 +1,10 @@
+<a name="v2.6.0"></a>
+## v2.6.0 (2022-09-28)
+
+
+#### Features
+
+*   add support for Kali Linux
 <a name="v2.5.0"></a>
 ## v2.5.0 (2022-09-27)
 

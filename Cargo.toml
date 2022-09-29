@@ -1,6 +1,6 @@
 [package]
 name = "os_type"
-version = "2.5.0"
+version = "2.6.0"
 authors = ["Jan Schulte <janschulte@fastmail.com>"]
 license = "MIT"
 description = "Detect the operating system type"
