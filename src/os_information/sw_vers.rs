@@ -6,9 +6,7 @@ use std::process::Command;
 use super::{OSInformation, OSType, TryInformation};
 
 #[derive(Debug, PartialEq)]
-pub struct SwVers {
-    pub product_version: Option<String>,
-}
+pub struct SwVers {}
 
 impl TryInformation for SwVers {
     fn try_information() -> Option<OSInformation> {
