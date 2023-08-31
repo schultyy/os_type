@@ -27,6 +27,7 @@ impl TryInformation for OSRelease {
                 "debian" => Some(OSInformation::new(OSType::Debian, version)),
                 "deepin" => Some(OSInformation::new(OSType::Deepin, version)),
                 "fedora" => Some(OSInformation::new(OSType::Fedora, version)),
+                "freebsd" => Some(OSInformation::new(OSType::FreeBSD, version)),
                 "kali" => Some(OSInformation::new(OSType::Kali, version)),
                 "nixos" => Some(OSInformation::new(OSType::NixOS, version)),
                 "opensuse" => Some(OSInformation::new(OSType::OpenSUSE, version)),
