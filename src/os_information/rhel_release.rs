@@ -3,6 +3,7 @@ use utils::*;
 
 use super::{OSInformation, OSType, TryInformation};
 
+#[derive(Debug, PartialEq)]
 pub struct RHELRelease {
     distro: Option<String>,
     version: Option<String>,
@@ -50,15 +51,37 @@ mod test {
 
     #[test]
     pub fn centos_7_3_1611() {
-        let parse_results = parse("CentOS Linux release 7.3.1611 (Core)".into());
-        assert_eq!(parse_results.distro, Some("CentOS".to_string()));
-        assert_eq!(parse_results.version, Some("7.3.1611".to_string()));
+        let sample = "CentOS Linux release 7.3.1611 (Core)".into();
+        assert_eq!(
+            parse(sample),
+            RHELRelease {
+                distro: Some("CentOS Linux".to_string()),
+                version: Some("7.3.1611".to_string())
+            }
+        );
     }
 
     #[test]
     pub fn redhat_9_2() {
-        let parse_results = parse("Red Hat Enterprise Linux release 9.2 (Plow)".into());
-        assert_eq!(parse_results.distro, Some("Red Hat Enterprise".to_string()));
-        assert_eq!(parse_results.version, Some("9.2".to_string()));
+        let sample = "Red Hat Enterprise Linux release 9.2 (Plow)".into();
+        assert_eq!(
+            parse(sample),
+            RHELRelease {
+                distro: Some("Red Hat Enterprise Linux".to_string()),
+                version: Some("9.2".to_string())
+            }
+        );
+    }
+
+    #[test]
+    pub fn fedora_38() {
+        let sample = "Fedora release 38 (Thirty Eight)".into();
+        assert_eq!(
+            parse(sample),
+            RHELRelease {
+                distro: Some("Fedora".to_string()),
+                version: Some("38".to_string())
+            }
+        );
     }
 }
