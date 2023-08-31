@@ -2,13 +2,14 @@ mod lsb_release;
 mod os_release;
 mod rhel_release;
 mod sw_vers;
+mod uname;
 mod windows_registry;
 
 use std::fmt::Display;
 
 use self::{
     lsb_release::LsbRelease, os_release::OSRelease, rhel_release::RHELRelease, sw_vers::SwVers,
-    windows_registry::WindowsRegistry,
+    uname::Uname, windows_registry::WindowsRegistry,
 };
 
 /// A list of supported operating system types
@@ -118,7 +119,8 @@ impl OSInformation {
 
 impl OSInformation {
     pub fn current_platform() -> Self {
-        WindowsRegistry::try_information()
+        Uname::try_information()
+            .or_else(WindowsRegistry::try_information)
             .or_else(SwVers::try_information)
             .or_else(LsbRelease::try_information)
             .or_else(OSRelease::try_information)
