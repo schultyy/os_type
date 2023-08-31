@@ -27,18 +27,18 @@ pub enum OSType {
 
     // Linux
     GenericLinux,
+    Alpine,
+    Arch,
+    CentOS,
+    Debian,
+    Deepin,
+    Fedora,
+    Kali,
+    Manjaro,
+    NixOS,
+    OpenSUSE,
     RedHat,
     Ubuntu,
-    Debian,
-    Arch,
-    Manjaro,
-    CentOS,
-    OpenSUSE,
-    Alpine,
-    Deepin,
-    NixOS,
-    Kali,
-    Fedora,
 }
 
 impl Display for OSType {
