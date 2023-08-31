@@ -20,7 +20,7 @@ impl TryInformation for RHELRelease {
                 .to_lowercase();
             match distro.as_str() {
                 "centos" => Some(OSInformation::new(OSType::CentOS, version)),
-                "red" => Some(OSInformation::new(OSType::RedHat, version)),
+                "red" => Some(OSInformation::new(OSType::Redhat, version)),
                 _ => None,
             }
         })

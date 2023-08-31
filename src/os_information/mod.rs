@@ -37,7 +37,7 @@ pub enum OSType {
     Manjaro,
     NixOS,
     OpenSUSE,
-    RedHat,
+    Redhat,
     Ubuntu,
 }
 
@@ -66,7 +66,7 @@ impl Display for OSType {
             OSType::Manjaro => write!(f, "Manjaro"),
             OSType::NixOS => write!(f, "NixOS"),
             OSType::OpenSUSE => write!(f, "openSUSE"),
-            OSType::RedHat => write!(f, "Red Hat"),
+            OSType::Redhat => write!(f, "Red Hat"),
             OSType::Ubuntu => write!(f, "Ubuntu"),
         }
     }
