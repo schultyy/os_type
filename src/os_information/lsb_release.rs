@@ -6,8 +6,8 @@ use super::{OSInformation, OSType, TryInformation};
 
 #[derive(Debug, PartialEq)]
 pub struct LsbRelease {
-    pub distro: Option<String>,
-    pub version: Option<String>,
+    distro: Option<String>,
+    version: Option<String>,
 }
 
 impl TryInformation for LsbRelease {
