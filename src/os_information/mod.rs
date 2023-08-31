@@ -40,6 +40,9 @@ pub enum OSType {
     PopOS,
     Redhat,
     Ubuntu,
+
+    // BSD
+    FreeBSD,
 }
 
 impl Display for OSType {
@@ -56,7 +59,7 @@ impl Display for OSType {
             OSType::OSX => write!(f, "Mac OS X"),
 
             // Linux
-            OSType::GenericLinux => write!(f, "GenericLinux"),
+            OSType::GenericLinux => write!(f, "Generic Linux"),
             OSType::Alpine => write!(f, "Alpine"),
             OSType::Arch => write!(f, "Arch"),
             OSType::CentOS => write!(f, "CentOS"),
@@ -70,6 +73,9 @@ impl Display for OSType {
             OSType::PopOS => write!(f, "Pop!_OS"),
             OSType::Redhat => write!(f, "Red Hat"),
             OSType::Ubuntu => write!(f, "Ubuntu"),
+
+            // BSD
+            OSType::FreeBSD => write!(f, "FreeBSD"),
         }
     }
 }
@@ -82,6 +88,8 @@ impl Default for OSType {
             Self::MacOS
         } else if cfg!(target_os = "linux") {
             Self::GenericLinux
+        } else if cfg!(target_os = "freebsd") {
+            Self::FreeBSD
         } else {
             Self::Unknown
         }

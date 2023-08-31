@@ -226,4 +226,25 @@ LOGO=distributor-logo-pop-os
             }
         );
     }
+
+    #[test]
+    fn freebsd_12_4() {
+        let sample = r#"NAME=FreeBSD
+VERSION="12.4-RELEASE"
+VERSION_ID="12.4"
+ID=freebsd
+ANSI_COLOR="0;31"
+PRETTY_NAME="FreeBSD 12.4-RELEASE"
+CPE_NAME="cpe:/o:freebsd:freebsd:12.4"
+HOME_URL="https://FreeBSD.org/"
+BUG_REPORT_URL="https://bugs.FreeBSD.org/"
+"#;
+        assert_eq!(
+            parse(sample),
+            OSRelease {
+                distro: Some("FreeBSD".to_string()),
+                version: Some("12.4".to_string())
+            }
+        )
+    }
 }
