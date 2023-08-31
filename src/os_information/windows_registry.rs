@@ -11,10 +11,13 @@ impl TryInformation for WindowsRegistry {
             use winreg::RegKey;
 
             let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
-            let cur_ver = hklm.open_subkey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion")?;
+            let cur_ver = hklm
+                .open_subkey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")
+                .ok()?;
             cur_ver
-                .get_value("CurrentBuildNumber")
+                .get_value("CurrentBuild")
                 .map(|s| OSInformation::new(OSType::Windows, s))
+                .ok()
         }
         #[cfg(not(target_os = "windows"))]
         None

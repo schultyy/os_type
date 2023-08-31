@@ -1,4 +1,6 @@
 extern crate regex;
+#[cfg(target_os = "windows")]
+extern crate winreg;
 
 mod os_information;
 mod utils;
