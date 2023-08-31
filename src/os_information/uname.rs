@@ -34,17 +34,17 @@ fn retrieve() -> Option<Uname> {
         .output()
         .map(|output| {
             let stdout = String::from_utf8_lossy(&output.stdout);
-            parse(&stdout)
+            parse(stdout)
         })
         .ok()
 }
 
-fn parse(file: &str) -> Uname {
+fn parse<S: AsRef<str>>(file: S) -> Uname {
     let distrib_regex = Regex::new(r#"^(.*?)-"#).unwrap();
     let version_regex = Regex::new(r#"Windows\s(.*?)-"#).unwrap();
 
-    let distro = get_first_capture(&distrib_regex, file);
-    let version = get_first_capture(&version_regex, file);
+    let distro = get_first_capture(&distrib_regex, &file);
+    let version = get_first_capture(&version_regex, &file);
 
     Uname { distro, version }
 }

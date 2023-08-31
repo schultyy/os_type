@@ -1,17 +1,7 @@
-use std::fs::File;
-use std::io::{Error, Read};
-
 use regex::Regex;
 
-pub fn read_file(filename: &str) -> Result<String, Error> {
-    let mut file = File::open(filename)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(contents)
-}
-
-pub fn get_first_capture(regex: &Regex, file: &str) -> Option<String> {
+pub fn get_first_capture<S: AsRef<str>>(regex: &Regex, file: S) -> Option<String> {
     regex
-        .captures(file)
+        .captures(file.as_ref())
         .and_then(|capture| capture.get(1).map(|match_| match_.as_str().to_owned()))
 }

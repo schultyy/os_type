@@ -1,3 +1,5 @@
+use std::fs::read_to_string;
+
 use regex::Regex;
 use utils::*;
 
@@ -28,14 +30,14 @@ impl TryInformation for RHELRelease {
 }
 
 fn retrieve() -> Option<RHELRelease> {
-    read_file("/etc/redhat-release")
+    read_to_string("/etc/redhat-release")
+        .or_else(|_| read_to_string("/etc/centos-release"))
+        .or_else(|_| read_to_string("/etc/fedora-release"))
         .map(parse)
-        .or_else(|_| read_file("/etc/centos-release").map(parse))
-        .or_else(|_| read_file("/etc/fedora-release").map(parse))
         .ok()
 }
 
-fn parse(file: String) -> RHELRelease {
+fn parse<S: AsRef<str>>(file: S) -> RHELRelease {
     let distrib_regex = Regex::new(r"((?:\w+(?:\s\w+)?)+) release").unwrap();
     let version_regex = Regex::new(r"release\s([\w\.]+)").unwrap();
 
@@ -51,7 +53,7 @@ mod test {
 
     #[test]
     pub fn centos_7_3_1611() {
-        let sample = "CentOS Linux release 7.3.1611 (Core)".into();
+        let sample = "CentOS Linux release 7.3.1611 (Core)";
         assert_eq!(
             parse(sample),
             RHELRelease {
@@ -63,7 +65,7 @@ mod test {
 
     #[test]
     pub fn redhat_9_2() {
-        let sample = "Red Hat Enterprise Linux release 9.2 (Plow)".into();
+        let sample = "Red Hat Enterprise Linux release 9.2 (Plow)";
         assert_eq!(
             parse(sample),
             RHELRelease {
@@ -75,7 +77,7 @@ mod test {
 
     #[test]
     pub fn fedora_38() {
-        let sample = "Fedora release 38 (Thirty Eight)".into();
+        let sample = "Fedora release 38 (Thirty Eight)";
         assert_eq!(
             parse(sample),
             RHELRelease {

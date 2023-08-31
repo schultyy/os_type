@@ -1,3 +1,5 @@
+use std::fs::read_to_string;
+
 use regex::Regex;
 use utils::*;
 
@@ -37,13 +39,13 @@ impl TryInformation for OSRelease {
 }
 
 fn retrieve() -> Option<OSRelease> {
-    read_file("/etc/os-release")
+    read_to_string("/etc/os-release")
+        .or_else(|_| read_to_string("/usr/lib/os-release"))
         .map(parse)
-        .or_else(|_| read_file("/usr/lib/os-release").map(parse))
         .ok()
 }
 
-fn parse(file: String) -> OSRelease {
+fn parse<S: AsRef<str>>(file: S) -> OSRelease {
     let distrib_regex = Regex::new(r#"NAME="(\w+)"#).unwrap();
     let version_regex = Regex::new(r#"VERSION_ID="?([\w\.]+)"#).unwrap();
 
@@ -71,8 +73,7 @@ BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu"
 PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
 VERSION_CODENAME=bionic
 UBUNTU_CODENAME=bionic
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -91,8 +92,7 @@ VERSION_ID=3.9.5
 PRETTY_NAME="Alpine Linux v3.9"
 HOME_URL="https://alpinelinux.org/"
 BUG_REPORT_URL="https://bugs.alpinelinux.org/"
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -111,8 +111,7 @@ VERSION_ID="20.3"
 VERSION="20.3"
 ID=Deepin
 HOME_URL="https://www.deepin.org/"
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -137,8 +136,7 @@ HOME_URL="https://nixos.org/"
 DOCUMENTATION_URL="https://nixos.org/learn.html"
 SUPPORT_URL="https://nixos.org/community.html"
 BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -160,8 +158,7 @@ ID_LIKE=debian
 HOME_URL="https://www.kali.org/"
 SUPPORT_URL="https://forums.kali.org/"
 BUG_REPORT_URL="https://bugs.kali.org"
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -192,8 +189,7 @@ REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 9"
 REDHAT_BUGZILLA_PRODUCT_VERSION=9.2
 REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
 REDHAT_SUPPORT_PRODUCT_VERSION="9.2"
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),

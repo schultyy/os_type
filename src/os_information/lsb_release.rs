@@ -46,7 +46,7 @@ pub fn retrieve() -> Option<LsbRelease> {
         .ok()
 }
 
-pub fn parse(file: String) -> LsbRelease {
+pub fn parse<S: AsRef<str>>(file: S) -> LsbRelease {
     let distrib_regex = Regex::new(r"Distributor ID:\s*(\w+)").unwrap();
     let version_regex = Regex::new(r"Release:\s*([\w\.]+)").unwrap();
 
@@ -67,8 +67,7 @@ Distributor ID:	Fedora
 Description:	Fedora release 38 (Thirty Eight)
 Release:	38
 Codename:	ThirtyEight
-"#
-        .to_string();
+"#;
 
         assert_eq!(
             parse(sample),
@@ -84,8 +83,7 @@ Codename:	ThirtyEight
         let sample = r#"Distributor ID:	Debian
 Description:	Debian GNU/Linux 7.8 (wheezy)
 Release:	7.8
-Codename:	wheezy"#
-            .to_string();
+Codename:	wheezy"#;
         assert_eq!(
             parse(sample),
             LsbRelease {
@@ -102,8 +100,7 @@ Distributor ID:	Arch
 Description:	Arch Linux
 Release:	rolling
 Codename:	n/a
-"#
-        .to_string();
+"#;
         assert_eq!(
             parse(sample),
             LsbRelease {
@@ -120,8 +117,7 @@ Distributor ID:	ManjaroLinux
 Description:	Manjaro Linux
 Release:	17.1.7
 Codename:	Hakoila
-"#
-        .to_string();
+"#;
         assert_eq!(
             parse(sample),
             LsbRelease {
@@ -138,8 +134,7 @@ Distributor ID: openSUSE
 Description:    openSUSE Tumbleweed
 Release:        20170712
 Codename:       n/a
-"#
-        .to_string();
+"#;
         assert_eq!(
             parse(sample),
             LsbRelease {
@@ -156,8 +151,7 @@ Distributor ID:	NixOS
 Description:	NixOS 21.11 (Porcupine)
 Release:	21.11
 Codename:	porcupine
-"#
-        .to_string();
+"#;
         assert_eq!(
             parse(sample),
             LsbRelease {
