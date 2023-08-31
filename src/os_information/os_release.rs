@@ -28,6 +28,7 @@ impl TryInformation for OSRelease {
                 "kali" => Some(OSInformation::new(OSType::Kali, version)),
                 "nixos" => Some(OSInformation::new(OSType::NixOS, version)),
                 "opensuse" => Some(OSInformation::new(OSType::OpenSUSE, version)),
+                "red" => Some(OSInformation::new(OSType::Redhat, version)),
                 "ubuntu" => Some(OSInformation::new(OSType::Ubuntu, version)),
                 _ => None,
             }
@@ -167,6 +168,38 @@ BUG_REPORT_URL="https://bugs.kali.org"
             OSRelease {
                 distro: Some("Kali".to_string()),
                 version: Some("2021.4".to_string()),
+            }
+        );
+    }
+
+    #[test]
+    fn redhat_9_2() {
+        let sample = r#"NAME="Red Hat Enterprise Linux"
+VERSION="9.2 (Plow)"
+ID="rhel"
+ID_LIKE="fedora"
+VERSION_ID="9.2"
+PLATFORM_ID="platform:el9"
+PRETTY_NAME="Red Hat Enterprise Linux 9.2 (Plow)"
+ANSI_COLOR="0;31"
+LOGO="fedora-logo-icon"
+CPE_NAME="cpe:/o:redhat:enterprise_linux:9::baseos"
+HOME_URL="https://www.redhat.com/"
+DOCUMENTATION_URL="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9"
+BUG_REPORT_URL="https://bugzilla.redhat.com/"
+
+REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 9"
+REDHAT_BUGZILLA_PRODUCT_VERSION=9.2
+REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="9.2"
+"#
+        .to_string();
+
+        assert_eq!(
+            parse(sample),
+            OSRelease {
+                distro: Some("Red".to_string()),
+                version: Some("9.2".to_string()),
             }
         );
     }
