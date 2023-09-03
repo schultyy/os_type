@@ -8,17 +8,18 @@ impl TryInformation for NSOperatingSystem {
         #[cfg(target_os = "macos")]
         {
             use super::OSType;
-            use cocoa::base::nil;
-            use cocoa::foundation::{NSOperatingSystemVersion, NSProcessInfo};
+            use cocoa_foundation::base::nil;
+            use cocoa_foundation::foundation::NSProcessInfo;
 
-            unsafe {
-                let version =
-                    NSProcessInfo::NSProcessInfo::processInfo(nil).operatingSystemVersion(self);
-            }
-            if version < version {
-                OSInformation::new(OSType::OSX, version)
+            let os_version = unsafe { NSProcessInfo::processInfo(nil).operatingSystemVersion() };
+            let version = format!(
+                "{}.{}.{}",
+                os_version.majorVersion, os_version.minorVersion, os_version.patchVersion
+            );
+            if os_version.majorVersion <= 10 {
+                Some(OSInformation::new(OSType::OSX, version))
             } else {
-                OSInformation::new(OSType::MacOS, version)
+                Some(OSInformation::new(OSType::MacOS, version))
             }
         }
         #[cfg(not(target_os = "macos"))]

@@ -8,14 +8,15 @@ mod lsb_release;
 mod ns_operating_system;
 mod os_release;
 mod rhel_release;
-mod sw_vers;
 mod uname;
 mod utils;
 mod windows_registry;
 
+use ns_operating_system::NSOperatingSystem;
+
 use self::{
-    lsb_release::LsbRelease, os_release::OsRelease, rhel_release::RhelRelease, sw_vers::SwVers,
-    uname::Uname, windows_registry::WindowsRegistry,
+    lsb_release::LsbRelease, os_release::OsRelease, rhel_release::RhelRelease, uname::Uname,
+    windows_registry::WindowsRegistry,
 };
 use std::fmt::Display;
 
@@ -193,11 +194,15 @@ impl OSInformation {
 ///println!("Version: {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
-    None.or_else(Uname::try_information)
+    None
+        // Windows
+        .or_else(Uname::try_information)
         .or_else(WindowsRegistry::try_information)
-        .or_else(SwVers::try_information)
-        .or_else(LsbRelease::try_information)
+        // macOS
+        .or_else(NSOperatingSystem::try_information)
+        // Linux/BSD
         .or_else(OsRelease::try_information)
         .or_else(RhelRelease::try_information)
+        .or_else(LsbRelease::try_information)
         .unwrap_or_default()
 }
