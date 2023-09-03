@@ -12,5 +12,8 @@ regex = "1"
 [target.'cfg(windows)'.dependencies]
 winreg = "0.51"
 
+[target.'cfg(macos)'.dependencies]
+cocoa-foundation = "0.1.1"
+
 [[example]]
 name = "os_type"

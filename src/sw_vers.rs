@@ -1,6 +1,3 @@
-/*
- * Mac OS X related checks
- */
 use super::{OSInformation, OSType, TryInformation};
 use std::process::Command;
 
@@ -13,7 +10,6 @@ impl TryInformation for SwVers {
             .arg("-productVersion")
             .output()
             .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_string())
-            .ok()
             .map(|version| {
                 if version.starts_with("10") {
                     OSInformation::new(OSType::OSX, version)
@@ -21,5 +17,6 @@ impl TryInformation for SwVers {
                     OSInformation::new(OSType::MacOS, version)
                 }
             })
+            .ok()
     }
 }

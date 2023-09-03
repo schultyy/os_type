@@ -1,8 +1,11 @@
+#[cfg(target_os = "macos")]
+extern crate cocoa_foundation;
 extern crate regex;
 #[cfg(target_os = "windows")]
 extern crate winreg;
 
 mod lsb_release;
+mod ns_operating_system;
 mod os_release;
 mod rhel_release;
 mod sw_vers;
