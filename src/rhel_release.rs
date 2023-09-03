@@ -11,7 +11,7 @@ pub struct RhelRelease {
 
 impl TryInformation for RhelRelease {
     fn try_information() -> Option<OSInformation> {
-        retrieve().and_then(|r| {
+        retrieve().map(parse).and_then(|r| {
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
                 "centos" => OSInformation::some_new(OSType::CentOS, r.version),
@@ -23,11 +23,10 @@ impl TryInformation for RhelRelease {
     }
 }
 
-fn retrieve() -> Option<RhelRelease> {
+fn retrieve() -> Option<String> {
     read_to_string("/etc/redhat-release")
         .or_else(|_| read_to_string("/etc/centos-release"))
         .or_else(|_| read_to_string("/etc/fedora-release"))
-        .map(parse)
         .ok()
 }
 

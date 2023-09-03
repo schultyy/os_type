@@ -11,7 +11,7 @@ pub struct Uname {
 
 impl TryInformation for Uname {
     fn try_information() -> Option<OSInformation> {
-        retrieve().and_then(|r| {
+        retrieve().map(parse).and_then(|r| {
             let version = r.version.unwrap_or(OSInformation::default_version());
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
@@ -22,14 +22,11 @@ impl TryInformation for Uname {
     }
 }
 
-fn retrieve() -> Option<Uname> {
+fn retrieve() -> Option<String> {
     Command::new("uname")
         .arg("-or")
         .output()
-        .map(|output| {
-            let stdout = String::from_utf8_lossy(&output.stdout);
-            parse(stdout.trim())
-        })
+        .map(|output| String::from_utf8_lossy(&output.stdout).to_string())
         .ok()
 }
 

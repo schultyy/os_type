@@ -11,7 +11,7 @@ pub struct LsbRelease {
 
 impl TryInformation for LsbRelease {
     fn try_information() -> Option<OSInformation> {
-        retrieve().and_then(|r| {
+        retrieve().map(parse).and_then(|r| {
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
                 "arch" => OSInformation::some_new(OSType::Arch, r.version),
@@ -29,14 +29,11 @@ impl TryInformation for LsbRelease {
     }
 }
 
-pub fn retrieve() -> Option<LsbRelease> {
+pub fn retrieve() -> Option<String> {
     Command::new("lsb_release")
         .arg("-a")
         .output()
-        .map(|output| {
-            let stdout = String::from_utf8_lossy(&output.stdout);
-            parse(stdout.to_string())
-        })
+        .map(|output| String::from_utf8_lossy(&output.stdout).to_string())
         .ok()
 }
 

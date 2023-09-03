@@ -11,7 +11,7 @@ pub struct OsRelease {
 
 impl TryInformation for OsRelease {
     fn try_information() -> Option<OSInformation> {
-        retrieve().and_then(|r| {
+        retrieve().map(parse).and_then(|r| {
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
                 "alpine" => OSInformation::some_new(OSType::Alpine, r.version),
@@ -33,10 +33,9 @@ impl TryInformation for OsRelease {
     }
 }
 
-fn retrieve() -> Option<OsRelease> {
+fn retrieve() -> Option<String> {
     read_to_string("/etc/os-release")
         .or_else(|_| read_to_string("/usr/lib/os-release"))
-        .map(parse)
         .ok()
 }
 
