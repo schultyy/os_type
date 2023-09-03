@@ -136,6 +136,47 @@ impl OSInformation {
     pub(crate) fn some_new(os: OSType, version: Option<String>) -> Option<Self> {
         Some(Self::new(os, version.unwrap_or_else(Self::default_version)))
     }
+
+    #[inline]
+    pub fn is_windows(&self) -> bool {
+        matches!(self.os_type, OSType::Windows | OSType::Cygwin)
+    }
+
+    #[inline]
+    pub fn is_macos(&self) -> bool {
+        matches!(self.os_type, OSType::OSX | OSType::MacOS)
+    }
+
+    #[inline]
+    pub fn is_linux(&self) -> bool {
+        matches!(
+            self.os_type,
+            OSType::Alpine
+                | OSType::Arch
+                | OSType::CentOS
+                | OSType::Debian
+                | OSType::Deepin
+                | OSType::Fedora
+                | OSType::GenericLinux
+                | OSType::Kali
+                | OSType::Manjaro
+                | OSType::NixOS
+                | OSType::OpenSUSE
+                | OSType::PopOS
+                | OSType::Redhat
+                | OSType::Ubuntu
+        )
+    }
+
+    #[inline]
+    pub fn is_freebsd(&self) -> bool {
+        matches!(self.os_type, OSType::FreeBSD)
+    }
+
+    #[inline]
+    pub fn is_known(&self) -> bool {
+        !matches!(self.os_type, OSType::Unknown)
+    }
 }
 
 ///Returns the current operating system type
