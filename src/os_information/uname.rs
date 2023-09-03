@@ -36,8 +36,8 @@ fn retrieve() -> Option<Uname> {
 }
 
 fn parse<S: AsRef<str>>(file: S) -> Uname {
-    let distrib_regex = Regex::new(r#"(\w+)$"#).unwrap();
-    let version_regex = Regex::new(r#"^([\w\.]+)"#).unwrap();
+    let distrib_regex = Regex::new(r"^(\w+)").unwrap();
+    let version_regex = Regex::new(r"^([\w\.]+)").unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
     let version = get_first_capture(&version_regex, &file);
