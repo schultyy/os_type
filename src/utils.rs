@@ -1,12 +1,7 @@
-use std::fs;
-use std::convert::AsRef;
-use std::path::Path;
+use regex::Regex;
 
-pub fn file_exists<P: AsRef<Path>>(path: P) -> bool {
-    let metadata = fs::metadata(path);
-
-    match metadata {
-        Ok(md) => md.is_dir() || md.is_file(),
-        Err(_) => false
-    }
+pub fn get_first_capture<S: AsRef<str>>(regex: &Regex, file: S) -> Option<String> {
+    regex
+        .captures(file.as_ref())
+        .and_then(|capture| capture.get(1).map(|match_| match_.as_str().to_owned()))
 }

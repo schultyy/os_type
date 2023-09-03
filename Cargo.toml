@@ -7,4 +7,13 @@ description = "Detect the operating system type"
 repository = "https://github.com/schultyy/os_type"
 
 [dependencies]
-regex="1"
+regex = "1"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+cocoa-foundation = "0.1.1"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+winreg = "0.51"
+
+[[example]]
+name = "os_type"

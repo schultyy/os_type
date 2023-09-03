@@ -17,7 +17,7 @@ In your code:
 ```rust
 extern crate os_type;
 let os = os_type::current_platform();
-println!("Type: {:?}", os.os_type);
+println!("Type: {}", os.os_type);
 println!("Version: {}", os.version);
 ```
 
@@ -40,24 +40,42 @@ match os_type::current_platform().os_type {
 
 Using `os_type::current_platform().os_type`, expect one of these return values:
 
-- Unknown
-- Redhat
-- CentOS
-- OSX
-- Ubuntu
-- Debian
-- Arch
-- Manjaro
-- Alpine
-- Deepin
-- NixOS
-- Kali
+- Unknown,
+
+### Windows
+- Windows,
+- Cygwin,
+
+### MacOS
+- MacOS,
+- OSX,
+
+### Linux
+- GenericLinux,
+- Alpine,
+- Arch,
+- CentOS,
+- Debian,
+- Deepin,
+- Fedora,
+- Kali,
+- Manjaro,
+- NixOS,
+- OpenSUSE,
+- PopOS,
+- Redhat,
+- Ubuntu,
+
+### BSD
+- FreeBSD,
 
 If you need support for more OS types, please consider opening a Pull Request.
 
-## Requirements
+## Try project on your computer
 
-On Linux based systems this library requires that [lsb_release](http://refspecs.linuxbase.org/LSB_2.0.1/LSB-PDA/LSB-PDA/lsbrelease.html) is installed.
+```shell
+cargo run --example os_type
+```
 
 ## Contributing
 
