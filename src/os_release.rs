@@ -1,5 +1,5 @@
 use super::{OSInformation, OSType, TryInformation};
-use regex::Regex;
+use regex::RegexBuilder;
 use std::fs::read_to_string;
 use utils::get_first_capture;
 
@@ -25,7 +25,7 @@ impl TryInformation for OsRelease {
                 "nixos" => OSInformation::some_new(OSType::NixOS, r.version),
                 "opensuse" => OSInformation::some_new(OSType::OpenSUSE, r.version),
                 "pop" => OSInformation::some_new(OSType::PopOS, r.version),
-                "red" => OSInformation::some_new(OSType::Redhat, r.version),
+                "rhel" => OSInformation::some_new(OSType::Redhat, r.version),
                 "ubuntu" => OSInformation::some_new(OSType::Ubuntu, r.version),
                 _ => None,
             }
@@ -40,8 +40,14 @@ fn retrieve() -> Option<String> {
 }
 
 fn parse<S: AsRef<str>>(file: S) -> OsRelease {
-    let distrib_regex = Regex::new(r#"NAME="(\w+)"#).unwrap();
-    let version_regex = Regex::new(r#"VERSION_ID="?([\w\.]+)"#).unwrap();
+    let distrib_regex = RegexBuilder::new(r#"^ID="?(\w+)"#)
+        .multi_line(true)
+        .build()
+        .unwrap();
+    let version_regex = RegexBuilder::new(r#"^VERSION_ID="?([\w\.]+)"#)
+        .multi_line(true)
+        .build()
+        .unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
     let version = get_first_capture(&version_regex, &file);
@@ -72,7 +78,7 @@ UBUNTU_CODENAME=bionic
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("Ubuntu".to_string()),
+                distro: Some("ubuntu".to_string()),
                 version: Some("18.04".to_string()),
             }
         );
@@ -91,7 +97,7 @@ BUG_REPORT_URL="https://bugs.alpinelinux.org/"
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("Alpine".to_string()),
+                distro: Some("alpine".to_string()),
                 version: Some("3.9.5".to_string()),
             }
         );
@@ -135,7 +141,7 @@ BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("NixOS".to_string()),
+                distro: Some("nixos".to_string()),
                 version: Some("21.11".to_string()),
             }
         );
@@ -157,7 +163,7 @@ BUG_REPORT_URL="https://bugs.kali.org"
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("Kali".to_string()),
+                distro: Some("kali".to_string()),
                 version: Some("2021.4".to_string()),
             }
         );
@@ -188,7 +194,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="9.2"
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("Red".to_string()),
+                distro: Some("rhel".to_string()),
                 version: Some("9.2".to_string()),
             }
         );
@@ -214,10 +220,54 @@ LOGO=distributor-logo-pop-os
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("Pop".to_string()),
+                distro: Some("pop".to_string()),
                 version: Some("22.04".to_string()),
             }
         );
+    }
+
+    #[test]
+    fn opensuse_leap_15_0() {
+        let sample = r#"NAME="openSUSE Leap"
+VERSION="15.0"
+ID="opensuse-leap"
+ID_LIKE="suse opensuse"
+VERSION_ID="15.0"
+PRETTY_NAME="openSUSE Leap 15.0"
+ANSI_COLOR="0;32"
+CPE_NAME="cpe:/o:opensuse:leap:15.0"
+BUG_REPORT_URL="https://bugs.opensuse.org"
+HOME_URL="https://www.opensuse.org/"
+"#;
+        assert_eq!(
+            parse(sample),
+            OsRelease {
+                distro: Some("opensuse".to_string()),
+                version: Some("15.0".to_string())
+            }
+        )
+    }
+
+    #[test]
+    fn opensuse_tumbleweed_20180530() {
+        let sample = r#"NAME="openSUSE Tumbleweed"
+# VERSION="20180530"
+ID="opensuse-tumbleweed"
+ID_LIKE="suse opensuse"
+VERSION_ID="20180530"
+PRETTY_NAME="openSUSE Tumbleweed"
+ANSI_COLOR="0;32"
+CPE_NAME="cpe:/o:opensuse:tumbleweed:20180530"
+BUG_REPORT_URL="https://bugs.opensuse.org"
+HOME_URL="https://www.opensuse.org/"
+"#;
+        assert_eq!(
+            parse(sample),
+            OsRelease {
+                distro: Some("opensuse".to_string()),
+                version: Some("20180530".to_string())
+            }
+        )
     }
 
     #[test]
@@ -235,7 +285,7 @@ BUG_REPORT_URL="https://bugs.FreeBSD.org/"
         assert_eq!(
             parse(sample),
             OsRelease {
-                distro: Some("FreeBSD".to_string()),
+                distro: Some("freebsd".to_string()),
                 version: Some("12.4".to_string())
             }
         )

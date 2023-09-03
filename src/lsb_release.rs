@@ -1,5 +1,5 @@
 use super::{OSInformation, OSType, TryInformation};
-use regex::Regex;
+use regex::RegexBuilder;
 use std::process::Command;
 use utils::get_first_capture;
 
@@ -38,8 +38,14 @@ pub fn retrieve() -> Option<String> {
 }
 
 pub fn parse<S: AsRef<str>>(file: S) -> LsbRelease {
-    let distrib_regex = Regex::new(r"Distributor ID:\s*(\w+)").unwrap();
-    let version_regex = Regex::new(r"Release:\s*([\w\.]+)").unwrap();
+    let distrib_regex = RegexBuilder::new(r"^Distributor ID:\s*(\w+)")
+        .multi_line(true)
+        .build()
+        .unwrap();
+    let version_regex = RegexBuilder::new(r"^Release:\s*([\w\.]+)")
+        .multi_line(true)
+        .build()
+        .unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
     let version = get_first_capture(&version_regex, &file);
