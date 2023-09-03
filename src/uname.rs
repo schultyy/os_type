@@ -1,9 +1,7 @@
-use std::process::Command;
-
-use regex::Regex;
-use utils::get_first_capture;
-
 use super::{OSInformation, OSType, TryInformation};
+use regex::Regex;
+use std::process::Command;
+use utils::get_first_capture;
 
 #[derive(Debug, PartialEq)]
 pub struct Uname {
@@ -36,7 +34,7 @@ fn retrieve() -> Option<Uname> {
 }
 
 fn parse<S: AsRef<str>>(file: S) -> Uname {
-    let distrib_regex = Regex::new(r"^(\w+)").unwrap();
+    let distrib_regex = Regex::new(r"(\w+)$").unwrap();
     let version_regex = Regex::new(r"^([\w\.]+)").unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);

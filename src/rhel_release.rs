@@ -1,9 +1,7 @@
-use std::fs::read_to_string;
-
-use regex::Regex;
-use utils::get_first_capture;
-
 use super::{OSInformation, OSType, TryInformation};
+use regex::Regex;
+use std::fs::read_to_string;
+use utils::get_first_capture;
 
 #[derive(Debug, PartialEq)]
 pub struct RHELRelease {

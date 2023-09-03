@@ -1,8 +1,7 @@
+use super::{OSInformation, OSType, TryInformation};
 use regex::Regex;
 use std::process::Command;
 use utils::get_first_capture;
-
-use super::{OSInformation, OSType, TryInformation};
 
 #[derive(Debug, PartialEq)]
 pub struct LsbRelease {

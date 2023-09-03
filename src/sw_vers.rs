@@ -1,9 +1,8 @@
 /*
  * Mac OS X related checks
  */
-use std::process::Command;
-
 use super::{OSInformation, OSType, TryInformation};
+use std::process::Command;
 
 #[derive(Debug, PartialEq)]
 pub struct SwVers {}
