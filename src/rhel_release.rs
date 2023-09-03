@@ -4,12 +4,12 @@ use std::fs::read_to_string;
 use utils::get_first_capture;
 
 #[derive(Debug, PartialEq)]
-pub struct RHELRelease {
+pub struct RhelRelease {
     distro: Option<String>,
     version: Option<String>,
 }
 
-impl TryInformation for RHELRelease {
+impl TryInformation for RhelRelease {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
@@ -23,7 +23,7 @@ impl TryInformation for RHELRelease {
     }
 }
 
-fn retrieve() -> Option<RHELRelease> {
+fn retrieve() -> Option<RhelRelease> {
     read_to_string("/etc/redhat-release")
         .or_else(|_| read_to_string("/etc/centos-release"))
         .or_else(|_| read_to_string("/etc/fedora-release"))
@@ -31,14 +31,14 @@ fn retrieve() -> Option<RHELRelease> {
         .ok()
 }
 
-fn parse<S: AsRef<str>>(file: S) -> RHELRelease {
+fn parse<S: AsRef<str>>(file: S) -> RhelRelease {
     let distrib_regex = Regex::new(r"(\w+)(?:\s\w+)*\srelease").unwrap();
     let version_regex = Regex::new(r"release\s([\w\.]+)").unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
     let version = get_first_capture(&version_regex, &file);
 
-    RHELRelease { distro, version }
+    RhelRelease { distro, version }
 }
 
 #[cfg(test)]
@@ -50,7 +50,7 @@ mod test {
         let sample = "CentOS Linux release 7.3.1611 (Core)";
         assert_eq!(
             parse(sample),
-            RHELRelease {
+            RhelRelease {
                 distro: Some("CentOS".to_string()),
                 version: Some("7.3.1611".to_string())
             }
@@ -62,7 +62,7 @@ mod test {
         let sample = "Red Hat Enterprise Linux release 9.2 (Plow)";
         assert_eq!(
             parse(sample),
-            RHELRelease {
+            RhelRelease {
                 distro: Some("Red".to_string()),
                 version: Some("9.2".to_string())
             }
@@ -74,7 +74,7 @@ mod test {
         let sample = "Fedora release 38 (Thirty Eight)";
         assert_eq!(
             parse(sample),
-            RHELRelease {
+            RhelRelease {
                 distro: Some("Fedora".to_string()),
                 version: Some("38".to_string())
             }

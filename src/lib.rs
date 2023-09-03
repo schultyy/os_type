@@ -11,7 +11,7 @@ mod utils;
 mod windows_registry;
 
 use self::{
-    lsb_release::LsbRelease, os_release::OSRelease, rhel_release::RHELRelease, sw_vers::SwVers,
+    lsb_release::LsbRelease, os_release::OsRelease, rhel_release::RhelRelease, sw_vers::SwVers,
     uname::Uname, windows_registry::WindowsRegistry,
 };
 use std::fmt::Display;
@@ -138,18 +138,6 @@ impl OSInformation {
     }
 }
 
-impl OSInformation {
-    pub fn current_platform() -> Self {
-        Uname::try_information()
-            .or_else(WindowsRegistry::try_information)
-            .or_else(SwVers::try_information)
-            .or_else(LsbRelease::try_information)
-            .or_else(OSRelease::try_information)
-            .or_else(RHELRelease::try_information)
-            .unwrap_or_default()
-    }
-}
-
 ///Returns the current operating system type
 ///
 ///#Example
@@ -161,5 +149,11 @@ impl OSInformation {
 ///println!("Version: {}", os.version);
 ///```
 pub fn current_platform() -> OSInformation {
-    OSInformation::current_platform()
+    None.or_else(Uname::try_information)
+        .or_else(WindowsRegistry::try_information)
+        .or_else(SwVers::try_information)
+        .or_else(LsbRelease::try_information)
+        .or_else(OsRelease::try_information)
+        .or_else(RhelRelease::try_information)
+        .unwrap_or_default()
 }

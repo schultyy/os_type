@@ -4,12 +4,12 @@ use std::fs::read_to_string;
 use utils::get_first_capture;
 
 #[derive(Debug, PartialEq)]
-pub struct OSRelease {
+pub struct OsRelease {
     distro: Option<String>,
     version: Option<String>,
 }
 
-impl TryInformation for OSRelease {
+impl TryInformation for OsRelease {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
             let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
@@ -33,21 +33,21 @@ impl TryInformation for OSRelease {
     }
 }
 
-fn retrieve() -> Option<OSRelease> {
+fn retrieve() -> Option<OsRelease> {
     read_to_string("/etc/os-release")
         .or_else(|_| read_to_string("/usr/lib/os-release"))
         .map(parse)
         .ok()
 }
 
-fn parse<S: AsRef<str>>(file: S) -> OSRelease {
+fn parse<S: AsRef<str>>(file: S) -> OsRelease {
     let distrib_regex = Regex::new(r#"NAME="(\w+)"#).unwrap();
     let version_regex = Regex::new(r#"VERSION_ID="?([\w\.]+)"#).unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
     let version = get_first_capture(&version_regex, &file);
 
-    OSRelease { distro, version }
+    OsRelease { distro, version }
 }
 
 #[cfg(test)]
@@ -72,7 +72,7 @@ UBUNTU_CODENAME=bionic
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Ubuntu".to_string()),
                 version: Some("18.04".to_string()),
             }
@@ -91,7 +91,7 @@ BUG_REPORT_URL="https://bugs.alpinelinux.org/"
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Alpine".to_string()),
                 version: Some("3.9.5".to_string()),
             }
@@ -110,7 +110,7 @@ HOME_URL="https://www.deepin.org/"
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Deepin".to_string()),
                 version: Some("20.3".to_string()),
             }
@@ -135,7 +135,7 @@ BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("NixOS".to_string()),
                 version: Some("21.11".to_string()),
             }
@@ -157,7 +157,7 @@ BUG_REPORT_URL="https://bugs.kali.org"
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Kali".to_string()),
                 version: Some("2021.4".to_string()),
             }
@@ -188,7 +188,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="9.2"
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Red".to_string()),
                 version: Some("9.2".to_string()),
             }
@@ -214,7 +214,7 @@ LOGO=distributor-logo-pop-os
 
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("Pop".to_string()),
                 version: Some("22.04".to_string()),
             }
@@ -235,7 +235,7 @@ BUG_REPORT_URL="https://bugs.FreeBSD.org/"
 "#;
         assert_eq!(
             parse(sample),
-            OSRelease {
+            OsRelease {
                 distro: Some("FreeBSD".to_string()),
                 version: Some("12.4".to_string())
             }
