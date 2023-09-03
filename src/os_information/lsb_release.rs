@@ -13,22 +13,17 @@ pub struct LsbRelease {
 impl TryInformation for LsbRelease {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
-            let version = r.version.unwrap_or(OSInformation::default_version());
-            let distro = r
-                .distro
-                .and_then(|d| d.split_whitespace().next().map(str::to_string))
-                .unwrap_or("".to_string())
-                .to_lowercase();
+            let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
-                "arch" => Some(OSInformation::new(OSType::Arch, version)),
-                "centos" => Some(OSInformation::new(OSType::CentOS, version)),
-                "debian" => Some(OSInformation::new(OSType::Debian, version)),
-                "fedora" => Some(OSInformation::new(OSType::Fedora, version)),
-                "kali" => Some(OSInformation::new(OSType::Kali, version)),
-                "manjarolinux" => Some(OSInformation::new(OSType::Manjaro, version)),
-                "nixos" => Some(OSInformation::new(OSType::NixOS, version)),
-                "opensuse" => Some(OSInformation::new(OSType::OpenSUSE, version)),
-                "ubuntu" => Some(OSInformation::new(OSType::Ubuntu, version)),
+                "arch" => OSInformation::some_new(OSType::Arch, r.version),
+                "centos" => OSInformation::some_new(OSType::CentOS, r.version),
+                "debian" => OSInformation::some_new(OSType::Debian, r.version),
+                "fedora" => OSInformation::some_new(OSType::Fedora, r.version),
+                "kali" => OSInformation::some_new(OSType::Kali, r.version),
+                "manjarolinux" => OSInformation::some_new(OSType::Manjaro, r.version),
+                "nixos" => OSInformation::some_new(OSType::NixOS, r.version),
+                "opensuse" => OSInformation::some_new(OSType::OpenSUSE, r.version),
+                "ubuntu" => OSInformation::some_new(OSType::Ubuntu, r.version),
                 _ => None,
             }
         })
@@ -145,7 +140,7 @@ Codename:       n/a
     }
 
     #[test]
-    pub fn tests_nixos_lsb_distro() {
+    pub fn nixos_21_11() {
         let sample = r#"No LSB modules are available.
 Distributor ID:	NixOS
 Description:	NixOS 21.11 (Porcupine)

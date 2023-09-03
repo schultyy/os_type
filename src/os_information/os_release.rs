@@ -14,26 +14,21 @@ pub struct OSRelease {
 impl TryInformation for OSRelease {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
-            let version = r.version.unwrap_or(OSInformation::default_version());
-            let distro = r
-                .distro
-                .and_then(|d| d.split_whitespace().next().map(str::to_string))
-                .unwrap_or("".to_string())
-                .to_lowercase();
+            let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
-                "alpine" => Some(OSInformation::new(OSType::Alpine, version)),
-                "arch" => Some(OSInformation::new(OSType::Arch, version)),
-                "centos" => Some(OSInformation::new(OSType::CentOS, version)),
-                "debian" => Some(OSInformation::new(OSType::Debian, version)),
-                "deepin" => Some(OSInformation::new(OSType::Deepin, version)),
-                "fedora" => Some(OSInformation::new(OSType::Fedora, version)),
-                "freebsd" => Some(OSInformation::new(OSType::FreeBSD, version)),
-                "kali" => Some(OSInformation::new(OSType::Kali, version)),
-                "nixos" => Some(OSInformation::new(OSType::NixOS, version)),
-                "opensuse" => Some(OSInformation::new(OSType::OpenSUSE, version)),
-                "pop" => Some(OSInformation::new(OSType::PopOS, version)),
-                "red" => Some(OSInformation::new(OSType::Redhat, version)),
-                "ubuntu" => Some(OSInformation::new(OSType::Ubuntu, version)),
+                "alpine" => OSInformation::some_new(OSType::Alpine, r.version),
+                "arch" => OSInformation::some_new(OSType::Arch, r.version),
+                "centos" => OSInformation::some_new(OSType::CentOS, r.version),
+                "debian" => OSInformation::some_new(OSType::Debian, r.version),
+                "deepin" => OSInformation::some_new(OSType::Deepin, r.version),
+                "fedora" => OSInformation::some_new(OSType::Fedora, r.version),
+                "freebsd" => OSInformation::some_new(OSType::FreeBSD, r.version),
+                "kali" => OSInformation::some_new(OSType::Kali, r.version),
+                "nixos" => OSInformation::some_new(OSType::NixOS, r.version),
+                "opensuse" => OSInformation::some_new(OSType::OpenSUSE, r.version),
+                "pop" => OSInformation::some_new(OSType::PopOS, r.version),
+                "red" => OSInformation::some_new(OSType::Redhat, r.version),
+                "ubuntu" => OSInformation::some_new(OSType::Ubuntu, r.version),
                 _ => None,
             }
         })

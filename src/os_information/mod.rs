@@ -123,7 +123,11 @@ impl OSInformation {
     }
 
     pub fn new(os_type: OSType, version: String) -> Self {
-        OSInformation { os_type, version }
+        Self { os_type, version }
+    }
+
+    pub(crate) fn some_new(os: OSType, version: Option<String>) -> Option<Self> {
+        Some(Self::new(os, version.unwrap_or_else(Self::default_version)))
     }
 }
 

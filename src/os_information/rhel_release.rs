@@ -14,15 +14,11 @@ pub struct RHELRelease {
 impl TryInformation for RHELRelease {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
-            let version = r.version.unwrap_or(OSInformation::default_version());
-            let distro = r
-                .distro
-                .and_then(|d| d.split_whitespace().next().map(str::to_string))
-                .unwrap_or("".to_string())
-                .to_lowercase();
+            let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
-                "centos" => Some(OSInformation::new(OSType::CentOS, version)),
-                "red" => Some(OSInformation::new(OSType::Redhat, version)),
+                "centos" => OSInformation::some_new(OSType::CentOS, r.version),
+                "fedora" => OSInformation::some_new(OSType::Fedora, r.version),
+                "red" => OSInformation::some_new(OSType::Redhat, r.version),
                 _ => None,
             }
         })
@@ -38,7 +34,7 @@ fn retrieve() -> Option<RHELRelease> {
 }
 
 fn parse<S: AsRef<str>>(file: S) -> RHELRelease {
-    let distrib_regex = Regex::new(r"((?:\w+(?:\s\w+)?)+) release").unwrap();
+    let distrib_regex = Regex::new(r"(\w+)(?:\s\w+)*\srelease").unwrap();
     let version_regex = Regex::new(r"release\s([\w\.]+)").unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
@@ -57,7 +53,7 @@ mod test {
         assert_eq!(
             parse(sample),
             RHELRelease {
-                distro: Some("CentOS Linux".to_string()),
+                distro: Some("CentOS".to_string()),
                 version: Some("7.3.1611".to_string())
             }
         );
@@ -69,7 +65,7 @@ mod test {
         assert_eq!(
             parse(sample),
             RHELRelease {
-                distro: Some("Red Hat Enterprise Linux".to_string()),
+                distro: Some("Red".to_string()),
                 version: Some("9.2".to_string())
             }
         );

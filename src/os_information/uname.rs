@@ -15,11 +15,7 @@ impl TryInformation for Uname {
     fn try_information() -> Option<OSInformation> {
         retrieve().and_then(|r| {
             let version = r.version.unwrap_or(OSInformation::default_version());
-            let distro = r
-                .distro
-                .and_then(|d| d.split_whitespace().next().map(str::to_string))
-                .unwrap_or("".to_string())
-                .to_lowercase();
+            let distro = r.distro.unwrap_or("".to_string()).to_lowercase();
             match distro.as_str() {
                 "cygwin_nt" => Some(OSInformation::new(OSType::Cygwin, version)),
                 _ => None,
@@ -40,7 +36,7 @@ fn retrieve() -> Option<Uname> {
 }
 
 fn parse<S: AsRef<str>>(file: S) -> Uname {
-    let distrib_regex = Regex::new(r#"^(.*?)-"#).unwrap();
+    let distrib_regex = Regex::new(r#"^(\w+)"#).unwrap();
     let version_regex = Regex::new(r#"Windows\s(.*?)-"#).unwrap();
 
     let distro = get_first_capture(&distrib_regex, &file);
