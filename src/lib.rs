@@ -112,7 +112,7 @@ pub struct OSInformation {
     pub version: String,
 }
 
-pub trait TryInformation {
+pub(crate) trait TryInformation {
     fn try_information() -> Option<OSInformation>;
 }
 
@@ -127,7 +127,7 @@ impl Default for OSInformation {
 
 impl OSInformation {
     #[inline]
-    pub fn default_version() -> String {
+    pub(crate) fn default_version() -> String {
         "0.0.0".to_string()
     }
 
