@@ -1,6 +1,6 @@
 use regex::Regex;
 use std::process::Command;
-use utils::*;
+use utils::get_first_capture;
 
 use super::{OSInformation, OSType, TryInformation};
 
